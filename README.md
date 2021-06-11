@@ -1,29 +1,28 @@
 # MOS 6502 breadboard replica
 
-![MOS 6502 source wikipedia]( https://upload.wikimedia.org/wikipedia/commons/4/49/MOS_6502AD_4585_top.jpg "MOS6502")
+![MOS 6502]( https://upload.wikimedia.org/wikipedia/commons/4/49/MOS_6502AD_4585_top.jpg "MOS6502")
 
 ## Sections
->	Program Counter
-	>	16Bit (2x 74AC573)
-	>	[register]
+1. Program Counter
+-	16Bit (4x[counter])
+-	
 
-### Registers
-#### Index Y
-#### Index X
-#### Stack Pointer (S)
-#### Accumulator (ACC)
-#### Procesor Status (Flags)
-#### Instruction Register (IR)
+2. Registers
+Index Y
+Index X
+Stack Pointer (S)
+Accumulator (ACC)
+Procesor Status (Flags)
+Instruction Register (IR)
 
-### Buffers
-#### Data Bus
-#### Address Bus
+3. Buffers
+Data Bus
+Address Bus
 
-### RAM
+4. RAM
 
 
 Autor: Matej Dinis.
 
-
-[register]: 
-https://www.tme.eu/sk/details/cd74ac573e/zapadky/texas-instruments/
+[counter]: https://www.tme.eu/en/details/74ls93/counters-dividers/texas-instruments/sn74ls93n/
+[register]: https://www.tme.eu/sk/details/74ls374/prepinace/texas-instruments/sn74ls374n/
