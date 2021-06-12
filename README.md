@@ -4,8 +4,13 @@
 
 ## Sections
 1. Program Counter
--	16Bit (4x[counter])
--	
+	+ 16-bit (0) 
+	+ 4x[counter]
+	+ 
+	+ Control pins:
+  		* INC - Incerement PC
+  		* EN  - Enable PC (BUFFER)
+  		* LDP - Load PC
 
 2. Registers
 Index Y
@@ -26,3 +31,4 @@ Autor: Matej Dinis.
 
 [counter]: https://www.tme.eu/en/details/74ls93/counters-dividers/texas-instruments/sn74ls93n/
 [register]: https://www.tme.eu/sk/details/74ls374/prepinace/texas-instruments/sn74ls374n/
+[buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
