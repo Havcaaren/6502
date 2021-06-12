@@ -4,25 +4,24 @@
 
 ## Sections
 1. Program Counter
-	+ 16-bit (0) 
+	+ 16-bit
 	+ 4x[counter]
-	+ 
 	+ Control pins:
   		* INC - Incerement PC
-  		* EN  - Enable PC (BUFFER)
+  		* EN  - Enable PC ([buffer])
   		* LDP - Load PC
 
 2. Registers
-Index Y
-Index X
-Stack Pointer (S)
-Accumulator (ACC)
-Procesor Status (Flags)
-Instruction Register (IR)
+	+ Index Y
+	+ Index X
+	+ Stack Pointer (S)
+	+ Accumulator (ACC)
+	+ Procesor Status (Flags)
+	+ Instruction Register (IR)
 
 3. Buffers
-Data Bus
-Address Bus
+	+ Data Bus
+	+ Address Bus
 
 4. RAM
 
