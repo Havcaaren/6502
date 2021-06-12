@@ -10,6 +10,7 @@
   		* INC - Incerement PC
   		* EN  - Enable PC ([buffer])
   		* LDP - Load PC
+  	![Program Counter](https://raw.githubusercontent.com/Havcaaren/6502/2402fe6b0d6057a493e293980c77c1cc9b301f35/fotos/PC.JPG "Program Counter")
 
 2. Registers
 	+ Index Y
