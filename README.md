@@ -24,7 +24,13 @@
 	+ Data Bus
 	+ Address Bus
 
-4. RAM
+4. Random Access Memory
+        + EEPROM (512K?)
+
+5. Arithmetic Logic Unit 
+        + 2x[adder]
+        + ACC will be connected to A side of adder and store output
+        + Flags 
 
 
 Autor: Matej Dinis.
@@ -32,3 +38,4 @@ Autor: Matej Dinis.
 [counter]: https://www.tme.eu/en/details/74ls93/counters-dividers/texas-instruments/sn74ls93n/
 [register]: https://www.tme.eu/sk/details/74ls374/prepinace/texas-instruments/sn74ls374n/
 [buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
+[adder]: https://www.tme.eu/sk/details/nte74ls283/pocitadla-delice/nte-electronics/
