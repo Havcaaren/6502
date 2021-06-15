@@ -1,7 +1,5 @@
-# MOS 6502 breadboard replica
+# 8 bit breadboard CPU 
 
-![MOS 6502]( https://upload.wikimedia.org/wikipedia/commons/4/49/MOS_6502AD_4585_top.jpg "MOS6502")
-[MOS6500 datasheet](https://github.com/Havcaaren/6502/blob/36f61d3e318310a78285f4497656cc404691ea4a/datasheets/MOS6502.pdf)
 ## Sections
 1. Program Counter
 	+ 16-bit
