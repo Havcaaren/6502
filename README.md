@@ -8,13 +8,14 @@
   		* INC - Incerement PC
   		* EN  - Enable PC ([buffer])
   		* LDP - Load PC
-  	![Program Counter](https://raw.githubusercontent.com/Havcaaren/6502/2402fe6b0d6057a493e293980c77c1cc9b301f35/fotos/PC.JPG "Program Counter")
+![Program Counter](https://raw.githubusercontent.com/Havcaaren/6502/2402fe6b0d6057a493e293980c77c1cc9b301f35/fotos/PC.JPG "Program Counter")
 
 2. Registers
 	+ Index Y
 	+ Index X
-	+ Stack Pointer (S)
+	+ Stack Pointer (S) ????
 	+ Accumulator (ACC)
+	+ TMP (B)
 	+ Procesor Status (Flags)
 	+ Instruction Register (IR)
 
@@ -26,9 +27,9 @@
         + EEPROM (512K?)
 
 5. Arithmetic Logic Unit 
-        + 2x[adder]
-        + ACC will be connected to A side of adder and store output
-        + Flags 
+	+ 2x[adder]
+	+ ACC will be connected to A side of adder and store output
+	+ Flags 
 
 
 Autor: Matej Dinis.
