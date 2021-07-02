@@ -2,15 +2,16 @@
 
 ## Sections
 1. Program Counter
-From 0 to to 65535 (16bit). 
-Register will hold the number before loading.
+From 0 to to 65535 (16bit).\
+Register will hold the number before loading.\
+Connected directly to MAR.\
 	+ 4x[counter], 4x[register], 2x[buffer]
 	+ Control pins:
   		* INC - Incerement 
-  		* EN  - Enable (put on bus)
-  		* LDP - Load (put on bus) (H/L)
+  		* EN  - Enable 
+  		* LDP - Load
 2. Registers
-From 0 to 255 (8bit).
+From -127 to 127 (sign bit + 7bit).
 6 Registers (Y, X, S, IR, ACC, TMP)
 	+ 2x[register], 1x[buffer]
 	+ Control pins:
