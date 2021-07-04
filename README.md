@@ -1,7 +1,14 @@
 # 8 bit breadboard CPU 
 
 ## Sections
-1. Program Counter
+1. Power Source
+[Power Supply] or I will make power supply old PC PSU.
+2. Bus
+8bit width.
+3. Clock
+Astable 555 timer.\
+T = 0.5 ms. DC = 75%. 
+4. Program Counter
 From 0 to to 65535 (16bit).\
 Register will hold the number before loading.\
 Connected directly to MAR.\
@@ -10,25 +17,26 @@ Connected directly to MAR.\
   		* INC - Incerement 
   		* EN  - Enable 
   		* LDP - Load
-2. Registers
+5. Registers
 From -127 to 127 (sign bit + 7bit).
 6 Registers (Y, X, S, IR, ACC, TMP)
 	+ 2x[register], 1x[buffer]
 	+ Control pins:
 		* LD - Load (from bus)
 		* EN - Enable (put on bus)
-3. Random Access Memory
+6. Random Access Memory
 	+ MAR (16bit)
 	+ MDR (8bit)
-        + EEPROM (512Kb)
+    + EEPROM (512Kb)
 
-4. Arithmetic Logic Unit 
+7. Arithmetic Logic Unit 
 	+ ACC will be connected to A side of adder and store output
-	+ Flags 
-
+	+ Flags
+8. Control
 
 Autor: Matej Dinis.
 
 [counter]: https://www.tme.eu/en/details/74ls193/counters-dividers/texas-instruments/sn74ls193n/
 [register]: https://www.tme.eu/en/details/sn74ls273n/flip-flops/texas-instruments/
 [buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
+[Power Supply]: https://www.tme.eu/en/details/ama12er5-050200y/plug-in-power-supplies/aimtec/
