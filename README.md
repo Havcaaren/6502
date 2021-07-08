@@ -2,12 +2,12 @@
 
 ## Sections
 1. Power Source
-[Power Supply] or I will make power supply old PC PSU.
+[Power Supply] or I will make power supply from old PC PSU.
 2. Bus
 8bit width.
 3. Clock
 Astable 555 timer.\
-T = 0.5 ms. DC = 75%. 
+T = 0.5 ms. DC = 75%.
 4. Program Counter
 From 0 to to 65535 (16bit).\
 Register will hold the number before loading.\
@@ -28,12 +28,40 @@ From -127 to 127 (sign bit + 7bit).
 	+ MAR (16bit)
 	+ MDR (8bit)
     + EEPROM (512Kb)
-
-7. Arithmetic Logic Unit 
-	+ ACC will be connected to A side of adder and store output
-	+ Flags
+7. Arithmetic Logic Unit
+ACC and TMP registers.\
+	+ Control pins:
+		* ADD
+		* SUB
+		* CMP ?????
 8. Control
-
+OP Codes:
+	* NOP = 0x00
+	* Program Counter
+		+ INP
+		+ LDP
+	* Arithmetic Logic Unit
+		+ LDA
+		+ LDT
+		+ LDX
+		+ LDY
+		+ LDO
+		+ ADX
+		+ ADY
+		+ SUX
+		+ SUY
+		+ CMA
+		+ CMP
+	* Jump Control
+		+ JMP
+		+ JZR
+		+ JNZ
+		+ JLD
+		+ JGD
+		+ JEQ
+		+ STA
+		+ CLL
+		+ RET
 Autor: Matej Dinis.
 
 [counter]: https://www.tme.eu/en/details/74ls193/counters-dividers/texas-instruments/sn74ls193n/
