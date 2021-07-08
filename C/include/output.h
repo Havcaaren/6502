@@ -11,4 +11,8 @@ struct output {
     void display() const;
 };
 
+void output::display() const {
+    std::cout<<"[Output]: "<<val->val<<"\n";
+}
+
 #endif //C_OUTPUT_H

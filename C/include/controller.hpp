@@ -8,6 +8,10 @@
 #include "random_access_memory.hpp"
 #include "output.h"
 
+enum op_codes {
+    NOP = 0x00, ADX = 0x80, ADY = 0x81
+};
+
 struct controller {
     w_bus*                 bus = nullptr;
     index_register*        IR  = nullptr;
@@ -18,7 +22,20 @@ struct controller {
     random_access_memory*  ram = nullptr;
     program_counter*       pc  = nullptr;
 
-    void exec(int8_t org);
+    void exec(int8_t h_org, int8_t l_org);
 };
+
+void controller::exec(int8_t h_org, int8_t l_org) {
+    pc->manual_load(h_org, l_org);
+    for (org; org < 0xFFFF; ++org) {
+        ram->mar->load();
+        ram->enable();
+        IR->load();
+        switch (IR->val) {
+
+        }
+        pc->increment();
+    }
+}
 
 #endif //C_CONTROLLER_HPP
