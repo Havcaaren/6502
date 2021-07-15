@@ -73,9 +73,9 @@ OP Codes:
 		+ JMP = 0x1E
 		+ JZR = 0x1F
 		+ JNZ = 0x20
-		+ JLD = 0x21
-		+ JGD = 0x22
-		+ JEQ = 0x23
+		+ JLD = 0x21 ????
+		+ JGD = 0x22 ????
+		+ JEQ = 0x23 ????
 	* Input / Output
 		+ LDO = 0x24
 	
@@ -86,3 +86,4 @@ Autor: Matej Dinis.
 [buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
 [Power Supply]: https://www.tme.eu/en/details/ama12er5-050200y/plug-in-power-supplies/aimtec/
 [DIP switch]: https://www.tme.com/us/en-us/details/1825360-5/dip-switches/te-connectivity/
+[Comparator]: https://www.tme.eu/sk/details/74ls85/komparatory/texas-instruments/sn74ls85n/
