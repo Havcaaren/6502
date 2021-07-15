@@ -85,3 +85,4 @@ Autor: Matej Dinis.
 [register]: https://www.tme.eu/en/details/sn74ls273n/flip-flops/texas-instruments/
 [buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
 [Power Supply]: https://www.tme.eu/en/details/ama12er5-050200y/plug-in-power-supplies/aimtec/
+[DIP switch]: https://www.tme.com/us/en-us/details/1825360-5/dip-switches/te-connectivity/
