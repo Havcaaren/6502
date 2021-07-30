@@ -12,7 +12,7 @@ T = 0.5 ms. DC = 75%.
 From 0 to to 65535 (16bit).  
 Register will hold the number before loading.  
 Connected directly to MAR.  
-	+ 4x[counter], 4x[register], 2x[buffer]
+	+ 4x[counter], 2x[register], 2x[buffer]
 	+ Control pins:
   		* INC - Incerement 
   		* EN  - Enable 
@@ -20,11 +20,11 @@ Connected directly to MAR.
 5. Registers  
 From -127 to 127 (sign bit + 7bit).  
 6 Registers (Y, X, S ???, IR, ACC, TMP)  
-	+ 2x[register], 1x[buffer]
+	+ 1x[register], 1x[buffer]
 	+ Control pins:
 		* LD - Load (from bus)
 		* EN - Enable (put on bus)
-6. Random Access Memory  
+6. Random Access Memory r
 	+ MAR (16bit)
 	+ MDR (8bit)
     + EEPROM (512Kb)
@@ -42,42 +42,41 @@ OP Codes:
 		+ MAT = 0x02
 		+ MAX = 0x03
 		+ MAY = 0x04
-		+ MAT = 0x05
-		+ MXA = 0x06
-		+ MXY = 0x07
-		+ MYT = 0x08
-		+ MYA = 0x09
-		+ MYX = 0x0A
-		+ STA = 0x0B
-		+ CLL = 0x0C
-		+ RET = 0x0D
+		+ MXA = 0x05
+		+ MXY = 0x06
+		+ MYT = 0x07
+		+ MYA = 0x08
+		+ MYX = 0x09
+		+ STA = 0x0A
+		+ CLL = 0x0B
+		+ RET = 0x0C
 	* Program Counter
-		+ INP = 0x0E
-		+ LDP = 0x0F
+		+ INP = 0x0D
+		+ LDP = 0x0E
 	* Arithmetic Logic Unit
-		+ LDA = 0x10
-		+ LDX = 0x11
-		+ LDY = 0x12
-		+ INA = 0x13
-		+ DCA = 0x14
-		+ ADX = 0x15
-		+ ADY = 0x16
-		+ ADI = 0x17
-		+ SUX = 0x18
-		+ SUY = 0x19
-		+ SUI = 0x1A
-		+ CMP = 0x1B
-		+ AND = 0x1C
-		+ OR  = 0x1D
+		+ LDA = 0xF
+		+ LDX = 0x10
+		+ LDY = 0x11
+		+ INA = 0x12
+		+ DCA = 0x13
+		+ ADX = 0x14
+		+ ADY = 0x15
+		+ ADI = 0x16
+		+ SUX = 0x17
+		+ SUY = 0x18
+		+ SUI = 0x19
+		+ CMP = 0x1A
+		+ AND = 0x1B
+		+ OR  = 0x1C
 	* Jump Control
-		+ JMP = 0x1E
-		+ JZR = 0x1F
-		+ JNZ = 0x20
-		+ JLD = 0x21 ????
-		+ JGD = 0x22 ????
-		+ JEQ = 0x23 ????
+		+ JMP = 0x1D
+		+ JZR = 0x1E
+		+ JNZ = 0x1F
+		+ JLD = 0x20 ????
+		+ JGD = 0x21 ????
+		+ JEQ = 0x22 ????
 	* Input / Output
-		+ LDO = 0x24
+		+ LDO = 0x23
 	
 Autor: Matej Dinis.
 
