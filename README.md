@@ -86,3 +86,5 @@ Autor: Matej Dinis.
 [Power Supply]: https://www.tme.eu/en/details/ama12er5-050200y/plug-in-power-supplies/aimtec/
 [DIP switch]: https://www.tme.com/us/en-us/details/1825360-5/dip-switches/te-connectivity/
 [Comparator]: https://www.tme.eu/sk/details/74ls85/komparatory/texas-instruments/sn74ls85n/
+[Adder]: https://www.tme.eu/sk/en/details/nte74ls283/counters-dividers/nte-electronics/
+[XOR]: https://www.tme.eu/sk/en/details/nte74ls86/gates-inverters/nte-electronics/
