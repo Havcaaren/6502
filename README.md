@@ -15,7 +15,6 @@ Connected directly to MAR.
 	+ 4x[counter], 2x[register], 2x[buffer]
 	+ Control pins:
   		* INC - Incerement 
-  		* EN  - Enable 
   		* LDP - Load
 5. Registers [brd](https://github.com/Havcaaren/8bit-CPU/blob/be1d6c1e40c23d19458645bf2f5f8a7a15c926d6/fotos/register/register-brd.PNG)  
 From -127 to 127 (sign bit + 7bit).  
