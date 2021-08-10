@@ -8,7 +8,7 @@
 3. Clock  
 Astable 555 timer.
 T = 0.5 ms. DC = 75%.
-4. Program Counter  
+4. Program Counter [brd](https://github.com/Havcaaren/8bit-CPU/blob/master/fotos/pc/pc-brd.PNG)  
 From 0 to to 65535 (16bit).  
 Register will hold the number before loading.  
 Connected directly to MAR.  
@@ -17,14 +17,14 @@ Connected directly to MAR.
   		* INC - Incerement 
   		* EN  - Enable 
   		* LDP - Load
-5. Registers  
+5. Registers [brd](https://github.com/Havcaaren/8bit-CPU/blob/be1d6c1e40c23d19458645bf2f5f8a7a15c926d6/fotos/register/register-brd.PNG)  
 From -127 to 127 (sign bit + 7bit).  
 6 Registers (Y, X, S ???, IR, ACC, TMP)  
 	+ 1x[register], 1x[buffer]
 	+ Control pins:
-		* LD - Load (from bus)
-		* EN - Enable (put on bus)
-6. Random Access Memory r
+		* Clock (CP) - Load from bus
+		* Enable (OE) - Put on bus
+6. Random Access Memory
 	+ MAR (16bit)
 	+ MDR (8bit)
     + EEPROM (512Kb)
@@ -77,8 +77,11 @@ OP Codes:
 		+ JEQ = 0x22 ????
 	* Input / Output
 		+ LDO = 0x23
-	
+
+
+
 Autor: Matej Dinis.
+
 
 [counter]: https://www.tme.eu/en/details/74ls193/counters-dividers/texas-instruments/sn74ls193n/
 [register]: https://www.tme.eu/en/details/sn74ls273n/flip-flops/texas-instruments/
