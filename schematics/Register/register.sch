@@ -5305,8 +5305,8 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <attribute name="NAME" x="127.635" y="65.405" size="1.778" layer="95"/>
 <attribute name="VALUE" x="127.635" y="36.83" size="1.778" layer="96"/>
 </instance>
-<instance part="SUPPLY1" gate="G$1" x="142.24" y="68.58" smashed="yes">
-<attribute name="VALUE" x="140.335" y="71.755" size="1.778" layer="96"/>
+<instance part="SUPPLY1" gate="G$1" x="142.24" y="73.66" smashed="yes">
+<attribute name="VALUE" x="140.335" y="76.835" size="1.778" layer="96"/>
 </instance>
 <instance part="GND3" gate="1" x="121.92" y="35.56" smashed="yes">
 <attribute name="VALUE" x="119.38" y="33.02" size="1.778" layer="96"/>
@@ -5342,7 +5342,13 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="IC2" gate="G$1" pin="20"/>
 <wire x1="139.7" y1="63.5" x2="142.24" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="SUPPLY1" gate="G$1" pin="VCC"/>
-<wire x1="142.24" y1="63.5" x2="142.24" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="142.24" y1="63.5" x2="142.24" y2="68.58" width="0.1524" layer="91"/>
+<pinref part="IC2" gate="G$1" pin="1"/>
+<wire x1="142.24" y1="68.58" x2="142.24" y2="71.12" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="63.5" x2="121.92" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="63.5" x2="121.92" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="121.92" y1="68.58" x2="142.24" y2="68.58" width="0.1524" layer="91"/>
+<junction x="142.24" y="68.58"/>
 </segment>
 </net>
 <net name="D7" class="0">
@@ -5462,10 +5468,6 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <wire x1="124.46" y1="40.64" x2="121.92" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <wire x1="121.92" y1="40.64" x2="121.92" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="IC2" gate="G$1" pin="1"/>
-<wire x1="124.46" y1="63.5" x2="121.92" y2="63.5" width="0.1524" layer="91"/>
-<wire x1="121.92" y1="63.5" x2="121.92" y2="40.64" width="0.1524" layer="91"/>
-<junction x="121.92" y="40.64"/>
 </segment>
 </net>
 <net name="CP" class="0">
