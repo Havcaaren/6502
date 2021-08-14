@@ -6,78 +6,25 @@
 2. Bus  
 8bit width.
 3. Clock  
-Astable 555 timer.
-T = 0.5 ms. DC = 75%.
 4. Program Counter [brd](https://github.com/Havcaaren/8bit-CPU/blob/master/fotos/pc/pc-brd.PNG)  
-From 0 to to 65535 (16bit).  
+From 0 to to 65535 (16bit). May be not EEPROM will be 64k (13bit?).  
 Register will hold the number before loading.  
 Connected directly to MAR.  
 	+ 4x[counter], 2x[register], 2x[buffer]
 	+ Control pins:
   		* INC - Incerement 
   		* LDP - Load
-5. Registers [brd](https://github.com/Havcaaren/8bit-CPU/blob/be1d6c1e40c23d19458645bf2f5f8a7a15c926d6/fotos/register/register-brd.PNG)  
+5. Registers
 From -127 to 127 (sign bit + 7bit).  
 6 Registers (Y, X, S ???, IR, ACC, TMP)  
 	+ 1x[register], 1x[buffer]
 	+ Control pins:
 		* Clock (CP) - Load from bus
 		* Enable (OE) - Put on bus
-6. Random Access Memory
-	+ MAR (16bit)
-	+ MDR (8bit)
-    + EEPROM (512Kb)
+6. Random Access Memory  
 7. Arithmetic Logic Unit  
 ACC and TMP registers.  
-	+ Control pins:
-		* ADD
-		* SUB
-		* CMP ?????
 8. Control  
-OP Codes:
-	* Misc.
-		+ NOP = 0x00
-		+ HLT = 0x01
-		+ MAT = 0x02
-		+ MAX = 0x03
-		+ MAY = 0x04
-		+ MXA = 0x05
-		+ MXY = 0x06
-		+ MYT = 0x07
-		+ MYA = 0x08
-		+ MYX = 0x09
-		+ STA = 0x0A
-		+ CLL = 0x0B
-		+ RET = 0x0C
-	* Program Counter
-		+ INP = 0x0D
-		+ LDP = 0x0E
-	* Arithmetic Logic Unit
-		+ LDA = 0xF
-		+ LDX = 0x10
-		+ LDY = 0x11
-		+ INA = 0x12
-		+ DCA = 0x13
-		+ ADX = 0x14
-		+ ADY = 0x15
-		+ ADI = 0x16
-		+ SUX = 0x17
-		+ SUY = 0x18
-		+ SUI = 0x19
-		+ CMP = 0x1A
-		+ AND = 0x1B
-		+ OR  = 0x1C
-	* Jump Control
-		+ JMP = 0x1D
-		+ JZR = 0x1E
-		+ JNZ = 0x1F
-		+ JLD = 0x20 ????
-		+ JGD = 0x21 ????
-		+ JEQ = 0x22 ????
-	* Input / Output
-		+ LDO = 0x23
-
-
 
 Autor: Matej Dinis.
 
