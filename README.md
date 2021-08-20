@@ -1,12 +1,9 @@
 # 8 bit breadboard CPU 
 
 ## Sections
-1. Power Source  
-[Power Supply] or I will make power supply from old PC PSU.
-2. Bus  
-8bit width.
-3. Clock  
-4. Program Counter [brd](https://github.com/Havcaaren/8bit-CPU/blob/master/fotos/pc/pc-brd.PNG)  
+1. [Power Supply]
+2. Clock  
+3. Program Counter  
 From 0 to to 65535 (16bit). May be not EEPROM will be 64k (13bit?).  
 Register will hold the number before loading.  
 Connected directly to MAR.  
@@ -14,17 +11,23 @@ Connected directly to MAR.
 	+ Control pins:
   		* INC - Incerement 
   		* LDP - Load
-5. Registers
-From -127 to 127 (sign bit + 7bit).  
+4. Registers
+Sign bit + 7bit.  
 6 Registers (Y, X, S ???, IR, ACC, TMP)  
 	+ 1x[register], 1x[buffer]
 	+ Control pins:
 		* Clock (CP) - Load from bus
 		* Enable (OE) - Put on bus
-6. Random Access Memory  
-7. Arithmetic Logic Unit  
+5. Random Access Memory  
+6. Arithmetic Logic Unit  
 ACC and TMP registers.  
-8. Control  
+7. Control  
+
+
+## Schematics  
+1. ALU and Registers  
+[sch](schematics/ALU-AXYZ/sch.pdf) [brd](schematics/ALU-AXYZ/sch.pdf)  
+
 
 Autor: Matej Dinis.
 
