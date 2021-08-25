@@ -4,30 +4,31 @@
 1. [Power Supply]
 2. Clock  
 3. Program Counter  
-From 0 to to 65535 (16bit). May be not EEPROM will be 64k (13bit?).  
-Register will hold the number before loading.  
-Connected directly to MAR.  
-	+ 4x[counter], 2x[register], 2x[buffer]
+From 0 to to 8191 (13bit).  
+Register will hold the number before loading.   
+	+ 4x[counter], 2x[register]
 	+ Control pins:
   		* INC - Incerement 
   		* LDP - Load
 4. Registers
-Sign bit + 7bit.  
-6 Registers (Y, X, S ???, IR, ACC, TMP)  
-	+ 1x[register], 1x[buffer]
+8bit.  
+ACC, X, Y, Z, S???  
+	+ 1x[register], 2x[buffer] to B and A bus.
 	+ Control pins:
 		* Clock (CP) - Load from bus
 		* Enable (OE) - Put on bus
-5. Random Access Memory  
+5. Random Access Memory / Read Only Memory  
+Both AT28C64B.  
+ROM will contain program.  
+RAM 13bit address.  
 6. Arithmetic Logic Unit  
-ACC and TMP registers.  
 7. Control  
 
 
 ## Schematics  
-1. ALU and Registers  
-[sch](schematics/ALU-AXYZ/sch.pdf) [brd](schematics/ALU-AXYZ/sch.pdf)  
-
+1. Registers  
+Register - [sch](schematics/Register/register-sch.pdf) [brd](schematics/Register/register-brd.pdf)  
+Register Bus - [sch](schematics/Register/register-bus-sch.pdf) [brd](schematics/Register/register-bus-brd.pdf)  
 
 Autor: Matej Dinis.
 
