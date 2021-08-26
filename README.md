@@ -5,30 +5,35 @@
 2. Clock  
 3. Program Counter  
 From 0 to to 8191 (13bit).  
-Register will hold the number before loading.   
+Register will hold the number before loading. Bus is 8bit width (Little-Endian).  
 	+ 4x[counter], 2x[register]
 	+ Control pins:
-  		* INC - Incerement 
-  		* LDP - Load
+  		* INC - Incerement PC. 
+  		* LDP - Load from bus.
 4. Registers
 8bit.  
 ACC, X, Y, Z, S???  
-	+ 1x[register], 2x[buffer] to B and A bus.
+	+ 1x[register], 2x[buffer] to Bus.
 	+ Control pins:
-		* Clock (CP) - Load from bus
-		* Enable (OE) - Put on bus
+		* LD - Load from bus.
+		* OE - Put on bus.
 5. Random Access Memory / Read Only Memory  
 Both AT28C64B.  
-ROM will contain program.  
-RAM 13bit address.  
+ROM (13bit address) contain program. PC is directly connected to ROM.    
+RAM 13bit address. May be upper 4 bit will be used to control CE, 4 EEPROM so 4x64kbit.  
 6. Arithmetic Logic Unit  
 7. Control  
 
 
 ## Schematics  
-1. Registers  
+### Registers  
 Register - [sch](schematics/Register/register-sch.pdf) [brd](schematics/Register/register-brd.pdf)  
 Register Bus - [sch](schematics/Register/register-bus-sch.pdf) [brd](schematics/Register/register-bus-brd.pdf)  
+### Program Counter
+PC - [sch](schematics/PC-ROM/pc-sch.pdf) [brd](schematics/PC-ROM/pc-brd.pdf)  
+PC ROM - [sch](schematics/PC-ROM/rom-sch.pdf) [brd](schematics/PC-ROM/rom-brd.pdf)  
+PC BUS - [sch](schematics/PC-ROM/pc-bus-sch.pdf) [brd](schematics/PC-ROM/pc-bus-brd.pdf)  
+
 
 Autor: Matej Dinis.
 
