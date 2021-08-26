@@ -1,2 +1,3 @@
-*.html
-notes.txt
+ASM/.idea/
+ASM/CMakeLists.txt
+ASM/cmake*
