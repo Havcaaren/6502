@@ -1,3 +1,5 @@
 ASM/.idea/
 ASM/CMakeLists.txt
 ASM/cmake*
+ASM/*.exe
+ASM/*.bin
