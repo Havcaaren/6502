@@ -6,6 +6,7 @@ main:
     CMP
     JN L2
     OUT ACC
+    NOP
 end
 
 L1:

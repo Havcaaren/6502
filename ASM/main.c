@@ -2,143 +2,165 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct sub_routine {
-    int pos;
+typedef struct sub_routine {
+    int pos_org;
+    char* name;
     struct sub_routine* next;
-};
+} SUB_ROUTINE;
 
-int main(int argv, char** args) {
-    FILE* in = NULL;
-    FILE* out = NULL;
-    for (int i = 0; i < argv; ++i) {
-        if (strcmp(args[i], "-text") == 0) {
-#define OUT_TEXT 1
-            fprintf(stdout, "Found -text. Stdout enable.");
-        }
-        if (strstr(args[i], ".casm") != NULL) {
-            in = fopen(args[i], "r");
-#if OUT_TEXT
-            fprintf(stdout, "Found *.casm file.\n");
-#endif
-        }
+struct sub_routine* new_sub() {
+    SUB_ROUTINE* a = malloc(sizeof(SUB_ROUTINE));
+    a->pos_org = 0;
+    a->next = NULL;
+    a->name = calloc(256, sizeof(char));
+    return a;
+}
+
+void sub_free(SUB_ROUTINE* s) {
+    SUB_ROUTINE* it = s;
+    while (it != NULL) {
+        it = s->next;
+        free(s);
+        s = it;
+    }
+}
+
+typedef struct io {
+    FILE* in;
+    FILE* out;
+} IO;
+
+typedef enum type {
+    OP, NUM, ADD, REG
+} TYPE;
+
+typedef struct status {
+    unsigned char op;
+    int add;
+    TYPE type;
+} STATUS;
+
+STATUS* get_op(const char* b) {
+    if (b == NULL) {
+        return NULL;
     }
 
-    if (in == NULL) {
+    STATUS* s = malloc(sizeof(STATUS));
+
+    if (strcmp(b, "LDR") == 0) {
+        s->type = OP;
+        s->op = 128;
+    } else if (strcmp(b, "CLR") == 0) {
+        s->type = OP;
+        s->op = 1;
+    } else if (strcmp(b, "CMP") == 0) {
+        s->type = OP;
+        s->op = 34;
+    } else if (strcmp(b, "OUT") == 0) {
+        s->type = OP;
+        s->op = 16;
+    } else if (strcmp(b, "CALL") == 0) {
+        s->type = OP;
+        s->op = 42;
+    } else if (strcmp(b, "NOP") == 0) {
+        s->type = OP;
+        s->op = 0;
+    } else if (strcmp(b, "JMP") == 0) {
+        s->type = OP;
+        s->op = 48;
+    } else if (strcmp(b, "JZ") == 0) {
+        s->type = OP;
+        s->op = 49;
+    } else if (strcmp(b, "JN") == 0) {
+        s->type = OP;
+        s->op = 50;
+    } else if (strcmp(b, "JL") == 0) {
+        s->type = OP;
+        s->op = 51;
+    } else if (strcmp(b, "JG") == 0) {
+        s->type = OP;
+        s->op = 52;
+    } else if (strcmp(b, "JE") == 0) {
+        s->type = OP;
+        s->op = 53;
+    } else if (strcmp(b, "ADD") == 0) {
+        s->type = OP;
+        s->op = 64;
+    } else if (strcmp(b, "RET") == 0) {
+        s->type = OP;
+        s->op = 43;
+    } else if (strcmp(b, "SUB") == 0) {
+        s->type = OP;
+        s->op = 66;
+    } else if (strcmp(b, "X") == 0) {
+        s->type = REG;
+        s->op = 0;
+    } else if (strcmp(b, "Y") == 0) {
+        s->type = REG;
+        s->op = 1;
+    } else if (strcmp(b, "Z") == 0) {
+        s->type = REG;
+        s->op = 2;
+    } else if (strcmp(b, "ACC") == 0) {
+        s->type = REG;
+        s->op = 3;
+    } else if (b[0] == '$') {
+        s->type = ADD;
+        s->add = (int)strtol(b + 1, NULL, 16);
+    } else {
+        s->type = NUM;
+        s->op = (unsigned char)strtol(b, NULL, 16);
+    }
+    return s;
+}
+
+int main(int argv, char** args) {
+    IO* in_out = malloc(sizeof(IO));
+    SUB_ROUTINE* SubRoutine = NULL;
+    if (argv !=2) {
+        return -1;
+    }
+    in_out->in = fopen(args[1], "r");
+
+    if (in_out->in == NULL) {
         fprintf(stderr, "No input file.\n");
         return -1;
     }
 
-    out = fopen("out.bin", "wb");
-    if (out == NULL) {
+    in_out->out = fopen("out.bin", "wb");
+    if (in_out->out == NULL) {
         fprintf(stderr, "Cannot create output.bin file.\n");
-        fclose(in);
+        fclose(in_out->in);
         return -2;
     }
-#if OUT_TEXT
-    fprintf(stdout, "Created out.bin file.\n");
-#endif
 
-    unsigned char op;
-    char* buffer = calloc(256, sizeof(char));
     int org = 0;
-    int address = 0;
+    char* buffer = calloc(256, sizeof(char));
 
     // .org (little endian)
-    fscanf(in, "%s", buffer);
+    fscanf(in_out->in, "%s", buffer);
     if (strcmp(buffer, ".org") == 0) {
-        fscanf(in, "%s", buffer);
+        fscanf(in_out->in, "%s", buffer);
         org = strtol(buffer, NULL, 16);
-#if OUT_TEXT
-        fprintf(stdout, "Found .org. Value: %s, %d.\n", buffer, org);
-#endif
-        fwrite(&org, 2, 1, out);
+        fwrite(&org, 2, 1, in_out->out);
     } else {
         fprintf(stderr, "No .org.\n");
         return -3;
     }
 
     //main:
-    fscanf(in, "%s", buffer);
+    fscanf(in_out->in, "%s", buffer);
     if (strcmp(buffer, "main:") == 0) {
-#if OUT_TEXT
-        fprintf(stdout, "Found main label.\n");
-#endif
-        while (fscanf(in, "%s", buffer) != EOF) {
-            if (strcmp(buffer, "LDR") == 0) { // LoaD Register
-#if OUT_TEXT
-                fprintf(stdout, "Instruction Load ");
-#endif
-                fscanf(in, "%s", buffer);
-                switch (buffer[0]) {
-                    case 'X': {
-#if OUT_TEXT
-                        fprintf(stdout, "Register X, ");
-#endif
-                        op = 128;
-                        break;
-                    }
-                    case 'Y': {
-#if OUT_TEXT
-                        fprintf(stdout, "Register Y, ");
-#endif
-                        op = 129;
-                        break;
-                    }
-                    case 'Z': {
-#if OUT_TEXT
-                        fprintf(stdout, "Register Z, ");
-#endif
-                        op = 130;
-                        break;
-                    }
-                    case 'A':  {
-#if OUT_TEXT
-                        fprintf(stdout, "Register A, ");
-#endif
-                        op = 131;
-                        break;
-                    }
-                    default: {
-#if OUT_TEXT
-                        fprintf(stderr, "Unknown Register.\n");
-#endif
-                        fclose(in);
-                        fclose(out);
-                        free(buffer);
-                        return -5;
-                    }
-                }
-                fscanf(in, "%s", buffer);
-                if (buffer[0] == '$') {
-                    op += 4;
-                    fwrite(&op, 1, 1, out);
-                    memmove(buffer, buffer + 1, 256);
-                    address = (int)strtol(buffer, NULL, 16);
-                    fwrite(&address, 2, 1, out);
-#if OUT_TEXT
-                    fprintf(stdout, "Address %s.\n", buffer);
-#endif
-                } else {
-                    fwrite(&op, 1, 1, out);
-                    op = (int)strtol(buffer, NULL, 16);
-                    fwrite(&op, 1, 1, out);
-#if OUT_TEXT
-                    fprintf(stdout, "Value %d.\n", op);
-#endif
-                }
-                org++;
-            } else if (strcmp(buffer, "ADD") == 0) {
 
-                org++;
-            }
-        }
     } else {
         fprintf(stderr, "No main: label.\n");
-        return -4;
+        return -1;
     }
 
-    fclose(in);
-    fclose(out);
+    sub_free(SubRoutine);
     free(buffer);
+    fclose(in_out->in);
+    fclose(in_out->out);
+    free(in_out);
     return 0;
 }
