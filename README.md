@@ -20,7 +20,7 @@ ACC, X, Y, Z, S???
 5. Random Access Memory / Read Only Memory  
 Both AT28C64B.  
 ROM (13bit address) contain program. PC is directly connected to ROM.    
-RAM 13bit address. May be upper 4 bit will be used to control CE, 4 EEPROM so 4x64kbit.  
+RAM 13bit address. May be upper 3 bit will be used to control CE, 8 EEPROM so 8x64kbit.  
 6. Arithmetic Logic Unit  
 7. Control  
 
@@ -34,6 +34,9 @@ PC - [sch](schematics/PC-ROM/pc-sch.pdf) [brd](schematics/PC-ROM/pc-brd.pdf)
 PC ROM - [sch](schematics/PC-ROM/rom-sch.pdf) [brd](schematics/PC-ROM/rom-brd.pdf)  
 PC BUS - [sch](schematics/PC-ROM/pc-bus-sch.pdf) [brd](schematics/PC-ROM/pc-bus-brd.pdf)  
 
+## Fotos
+![Register](fotos/Registers.jpg)
+![PC-ROM](fotos/PC-ROM.jpg)
 
 Autor: Matej Dinis.
 
