@@ -2,11 +2,13 @@
 
 main:
     CLR ACC
+L2:
     CALL L1
     CMP
     JN L2
     OUT ACC
     NOP
+    HLT
 end
 
 L1:
@@ -14,8 +16,4 @@ L1:
     SUB 20
     ADD X
     RET
-end
-
-L2:
-    CLR ACC
 end
