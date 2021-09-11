@@ -34,6 +34,7 @@ typedef struct status {
     int add;
     char* n;
     bool need_reg;
+    bool jmp;
     TYPE type;
 } STATUS;
 
@@ -47,6 +48,7 @@ STATUS* get_op(const char* b) {
     s->n = NULL;
     s->add = 0;
     s->need_reg = false;
+    s->jmp = false;
     if (strcmp(b, "LDR") == 0) {
         s->type = OP;
         s->op = 128;
@@ -65,27 +67,34 @@ STATUS* get_op(const char* b) {
     } else if (strcmp(b, "CALL") == 0) {
         s->type = SUB;
         s->op = 42;
+        s->jmp = true;
     } else if (strcmp(b, "NOP") == 0) {
         s->type = OP;
         s->op = 0;
     } else if (strcmp(b, "JMP") == 0) {
         s->type = SUB;
         s->op = 48;
+        s->jmp = true;
     } else if (strcmp(b, "JZ") == 0) {
         s->type = SUB;
         s->op = 49;
+        s->jmp = true;
     } else if (strcmp(b, "JN") == 0) {
         s->type = SUB;
         s->op = 50;
+        s->jmp = true;
     } else if (strcmp(b, "JL") == 0) {
         s->type = SUB;
         s->op = 51;
+        s->jmp = true;
     } else if (strcmp(b, "JG") == 0) {
         s->type = SUB;
         s->op = 52;
+        s->jmp = true;
     } else if (strcmp(b, "JE") == 0) {
         s->type = SUB;
         s->op = 53;
+        s->jmp = true;
     } else if (strcmp(b, "ADD") == 0) {
         s->type = OP;
         s->op = 64;
@@ -181,7 +190,10 @@ int main(int argv, char** args) {
     LABEL* it_c = Call_Label;
     STATUS* s = NULL;
     unsigned char op = 0;
-    for (; strcmp(buffer, "end") == 0; fscanf(in, "%s", buffer)) {
+    while (fscanf(in, "%s", buffer) != EOF) {
+        if (strcmp(buffer, "end") == 0) {
+            break;
+        }
         s = get_op(buffer);
         switch (s->type) {
             case OP: {
@@ -204,14 +216,22 @@ int main(int argv, char** args) {
             }
             case REG: {
                 op += s->op;
-                fwrite(&(s->add), 2, 1, out);
+                fwrite(&op, 1, 1, out);
                 org++;
                 break;
             }
             case SUB: {
+                org++;
                 fwrite(&(s->op), 1, 1, out);
+
+                fscanf(in, "%s", buffer);
+                strcat(buffer, ":");
+                strcpy(it_c->name, buffer);
+                it_c->org = ftell(out);
+                it_c->next = new_label();
+                it_c = it_c->next;
+                org += 2;
                 fwrite(&(s->add), 2, 1, out);
-                org += 3;
                 break;
             }
             case LAB: {
@@ -225,6 +245,8 @@ int main(int argv, char** args) {
 
         free(s);
     }
+
+
 
     free_label(Label);
     free(buffer);
