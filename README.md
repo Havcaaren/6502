@@ -30,9 +30,7 @@ RAM 13bit address. May be upper 3 bit will be used to control CE, 8 EEPROM so 8x
 Register - [sch](schematics/Register/register-sch.pdf) [brd](schematics/Register/register-brd.pdf)  
 Register Bus - [sch](schematics/Register/register-bus-sch.pdf) [brd](schematics/Register/register-bus-brd.pdf)  
 ### Program Counter
-PC - [sch](schematics/PC-ROM/pc-sch.pdf) [brd](schematics/PC-ROM/pc-brd.pdf)  
-PC ROM - [sch](schematics/PC-ROM/rom-sch.pdf) [brd](schematics/PC-ROM/rom-brd.pdf)  
-PC BUS - [sch](schematics/PC-ROM/pc-bus-sch.pdf) [brd](schematics/PC-ROM/pc-bus-brd.pdf)  
+PC-ROM - [sch](schematics/PC-ROM/Program-Counter-sch.pdf) [brd](schematics/PC-ROM/Program-Counter-brd.pdf)  
 
 ## Fotos
 ![Register](fotos/Registers.jpg)
