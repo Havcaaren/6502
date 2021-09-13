@@ -1,7 +1,7 @@
 # CUBE (8bit CPU) 
 
 ## Parts
-### Registers [sch](schematics/Register/Register-sch.pdf) [brd](schematics/Register/Register-brd.pdf)  
+### Registers [sch](schematics/Register/register-sch.pdf) [brd](schematics/Register/register-brd.pdf)  
 74LS273 - [register]  
 74LS245 - [buffer]  
 8bit (-127 to 128). 3 main registers (X, Y, Z) + ACC.  
