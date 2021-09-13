@@ -33,7 +33,7 @@ RAM 13bit address. May be upper 3 bit will be used to control CE, 8 EEPROM so 8x
 ### RAM
 [sch](schematics/RAM/RAM-sch.pdf) [brd](scheamtics/RAM/RAM-brd.pdf)
 ### ALU
-[sch](schematics/ALU/ALU-sch.pdf) [brd](scheamtics/ALU/ALU-brd.pdf)
+[sch](schematics/ALU/ALU-sch.pdf) [brd](schematics/ALU/ALU-brd.pdf)
 
 ## Fotos
 ![Register](fotos/Registers.jpg)
