@@ -1,39 +1,42 @@
-# 8 bit breadboard CPU 
+# CUBE (8bit CPU) 
 
-## Sections
-1. [Power Supply]
-2. Clock  
-3. Program Counter  
-From 0 to to 8191 (13bit).  
-Register will hold the number before loading. Bus is 8bit width (Little-Endian).  
-	+ 4x[counter], 2x[register]
-	+ Control pins:
-  		* INC - Incerement PC. 
-  		* LDP - Load from bus.
-4. Registers
-8bit.  
-ACC, X, Y, Z, S???  
-	+ 1x[register], 2x[buffer] to Bus.
-	+ Control pins:
-		* LD - Load from bus.
-		* OE - Put on bus.
-5. Random Access Memory / Read Only Memory  
-Both AT28C64B.  
-ROM (13bit address) contain program. PC is directly connected to ROM.    
-RAM 13bit address. May be upper 3 bit will be used to control CE, 8 EEPROM so 8x64kbit.  
-6. Arithmetic Logic Unit  
-7. Control  
+## Parts
+### Registers [sch](schematics/Register/Register-sch.pdf) [brd](schematics/Register/Register-brd.pdf)  
+74LS273 - [register]  
+74LS245 - [buffer]  
+8bit (-127 to 128). 3 main registers (X, Y, Z) + ACC.  
+Func.: Load from bus and output to bus. Clear register.   
 
+### Program Counter and ROM [sch](schematics/PC-ROM/Program-Counter-sch.pdf) [brd](schematics/PC-ROM/Program-Counter-brd.pdf)  
+74LS193 -  [counter]  
+AT28C64B - [EEPROM]  
+13bit. From 0 to 8191.  
+Func. PC: Load from bus and output to bus (needed for JMP op). Increment.  
+Func. ROM: Output to bus.  
 
-## Schematics  
-### Registers  
-[sch](schematics/Register/Register-sch.pdf) [brd](schematics/Register/Register-brd.pdf)   
-### Program Counter
-[sch](schematics/PC-ROM/Program-Counter-sch.pdf) [brd](schematics/PC-ROM/Program-Counter-brd.pdf)  
-### RAM
-[sch](schematics/RAM/RAM-sch.pdf) [brd](scheamtics/RAM/RAM-brd.pdf)
-### ALU
-[sch](schematics/ALU/ALU-sch.pdf) [brd](schematics/ALU/ALU-brd.pdf)
+### RAM [sch](schematics/RAM/RAM-sch.pdf) [brd](schematics/RAM/RAM-brd.pdf)  
+74LS273 - [register]  
+AT28C64B - [EEPROM]  
+8 x 8192 bits.  
+Func.: Load form bus address. Load and Output to bus.  
+
+### ALU [sch](schematics/ALU/ALU-sch.pdf) [brd](schematics/ALU/ALU-brd.pdf)  
+74LS273 - [register]  
+74LS245 - [buffer]  
+74LS283 - [adder]  
+74LS00 - [and]  
+74LS32 - [or]  
+74LS86 - [xor]  
+74LS04 - [not]  
+74LS85 - [cmp]  
+Every func. is ACC and input from bus. NOT is only input from bus.  
+Func.: ADD, SUB, AND, OR, XOR, NOT and CMP (LD, GD, EQ).  
+Flags: ZF, OF, NF, LF, GF and EF.  
+
+### OUTPUT  
+
+### CONTROL  
+
 
 ## Fotos
 ![Register](fotos/Registers.jpg)
@@ -47,6 +50,10 @@ Autor: Matej Dinis.
 [buffer]: https://www.tme.eu/en/details/sn74ls245n/buffers-transceivers-drivers/texas-instruments/
 [Power Supply]: https://www.tme.eu/en/details/ama12er5-050200y/plug-in-power-supplies/aimtec/
 [DIP switch]: https://www.tme.com/us/en-us/details/1825360-5/dip-switches/te-connectivity/
-[Comparator]: https://www.tme.eu/sk/details/74ls85/komparatory/texas-instruments/sn74ls85n/
-[Adder]: https://www.tme.eu/sk/en/details/nte74ls283/counters-dividers/nte-electronics/
-[XOR]: https://www.tme.eu/sk/en/details/nte74ls86/gates-inverters/nte-electronics/
+[cmp]: https://www.tme.com/us/en-us/details/74ls85/comparators/texas-instruments/sn74ls85n/
+[adder]: https://www.tme.eu/en/en/details/nte74ls283/counters-dividers/nte-electronics/
+[xor]: https://www.tme.eu/en/details/nte74ls86/gates-inverters/nte-electronics/
+[EEPROM]: https://www.tme.com/us/en-us/details/at28c64b-15pu/parallel-eeprom-memories-integ-circ/microchip-technology/
+[and]: https://www.tme.com/us/en-us/details/sn74ls00n/gates-inverters/texas-instruments/
+[or]: https://www.tme.com/us/en-us/details/sn74ls32n/gates-inverters/texas-instruments/
+[not]: https://www.tme.com/us/en-us/details/sn74ls04n/gates-inverters/texas-instruments/
