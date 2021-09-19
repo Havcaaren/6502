@@ -1,6 +1,6 @@
-ASM/.idea/
-ASM/CMakeLists.txt
-ASM/cmake*
-ASM/*.exe
-ASM/*.bin
+Compiler/.idea/
+Compiler/CMakeLists.txt
+Compiler/cmake*
+Compiler/*.exe
+Compiler/*.bin
 *.ods*
