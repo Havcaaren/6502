@@ -94,13 +94,13 @@ void parse::start() {
                 op = new OP(32, 0, 0, 0,
                             true, false, false);
             } else if (tmp.find('Y') != std::string::npos) {
-                op = new OP(32, 0, 0, 0,
+                op = new OP(32, 0, 1, 0,
                             true, false, false);
             } else if (tmp.find('Z') != std::string::npos) {
-                op = new OP(32, 0, 0, 0,
+                op = new OP(32, 0, 2, 0,
                             true, false, false);
             } else if (tmp.find("ACC") != std::string::npos) {
-                op = new OP(32, 0, 0, 0,
+                op = new OP(32, 0, 3, 0,
                             true, false, false);
             } else {
                 op = new OP(32,
@@ -214,20 +214,62 @@ void parse::start() {
             tmp = buffer.substr(buffer.find("ADD"), buffer.size());
             if (tmp.find('X') != std::string::npos) {
                 tmp = tmp.substr(tmp.find('X') + 1, tmp.size());
-                op = new OP(128,
-                            std::stoi(tmp, nullptr, 16));
+                if (tmp.find('$') != std::string::npos) {
+                    op = new OP(128,0,0,
+                                std::stoi(tmp.substr(tmp.find('$') +1,
+                                                     tmp.size()),nullptr, 16),
+                                true, true, false);
+                } else {
+                    op = new OP(128,
+                                std::stoi(tmp,nullptr, 16),
+                                0,0,
+                                true, false, true);
+                }
             } else if (tmp.find('Y') != std::string::npos) {
                 tmp = tmp.substr(tmp.find('Y') + 1, tmp.size());
+                if (tmp.find('$') != std::string::npos) {
+                    op = new OP(128,0,1,
+                                std::stoi(tmp.substr(tmp.find('$') +1,
+                                                     tmp.size()),nullptr, 16),
+                                true, true, false);
+                } else {
+                    op = new OP(128,
+                                std::stoi(tmp,nullptr, 16),
+                                1,0,
+                                true, false, true);
+                }
             } else if (tmp.find('Z') != std::string::npos) {
                 tmp = tmp.substr(tmp.find('Z') + 1, tmp.size());
+                if (tmp.find('$') != std::string::npos) {
+                    op = new OP(128,0,2,
+                                std::stoi(tmp.substr(tmp.find('$') +1,
+                                                     tmp.size()),nullptr, 16),
+                                true, true, false);
+                } else {
+                    op = new OP(128,
+                                std::stoi(tmp,nullptr, 16),
+                                2,0,
+                                true, false, true);
+                }
             } else if (tmp.find("ACC") != std::string::npos) {
                 tmp = tmp.substr(tmp.find("ACC") + 3, tmp.size());
-            }
-            if (tmp.find('$') != std::string::npos) {
-            } else {
+                if (tmp.find('$') != std::string::npos) {
+                    op = new OP(128,0,3,
+                                std::stoi(tmp.substr(tmp.find('$') +1,
+                                                     tmp.size()),nullptr, 16),
+                                true, true, false);
+                } else {
+                    op = new OP(128,
+                                std::stoi(tmp,nullptr, 16),
+                                3,0,
+                                true, false, true);
+                }
             }
         } else if (buffer.find("HLT") != std::string::npos) {
+            op = new OP(160, 0, 0, 0,
+                        false, false, false);
         } else if (buffer.find("MOV") != std::string::npos) {
+            tmp = buffer.substr(buffer.find("MOV") + 3, buffer.size());
         } else {
         }
         org += op_size(buffer);
