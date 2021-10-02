@@ -1,26 +1,26 @@
 # CUBE (8bit CPU) 
 
 ## Parts
-### Registers [sch](schematics/Register/register-sch.pdf) [brd](schematics/Register/register-brd.pdf)  
+### Registers  
 74LS273 - [register]  
 74LS245 - [buffer]  
 8bit (-127 to 128). 3 main registers (X, Y, Z) + ACC.  
 Func.: Load from bus and output to bus. Clear register.   
 
-### Program Counter and ROM [sch](schematics/PC-ROM/Program-Counter-sch.pdf) [brd](schematics/PC-ROM/Program-Counter-brd.pdf)  
+### Program Counter and ROM  
 74LS193 -  [counter]  
 AT28C64B - [EEPROM]  
 13bit. From 0 to 8191.  
 Func. PC: Load from bus and output to bus (needed for JMP op). Increment.  
 Func. ROM: Output to bus.  
 
-### RAM [sch](schematics/RAM/RAM-sch.pdf) [brd](schematics/RAM/RAM-brd.pdf)  
+### RAM  
 74LS273 - [register]  
 AT28C64B - [EEPROM]  
 8 x 8192 bits.  
 Func.: Load form bus address. Load and Output to bus.  
 
-### ALU [sch](schematics/ALU/ALU-sch.pdf) [brd](schematics/ALU/ALU-brd.pdf)  
+### ALU  
 74LS273 - [register]  
 74LS245 - [buffer]  
 74LS283 - [adder]  
@@ -36,12 +36,7 @@ Flags: ZF, OF, NF, LF, GF and EF.
 ### OUTPUT  
 
 ### CONTROL  
-
-
-## Fotos
-![Register](fotos/Registers.jpg)
-![PC-ROM](fotos/PC-ROM.jpg)
-
+  
 Autor: Matej Dinis.
 
 
