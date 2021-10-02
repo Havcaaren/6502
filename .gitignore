@@ -4,3 +4,4 @@ Compiler/cmake*
 Compiler/*.exe
 Compiler/*.bin
 *.ods*
+datasheets
