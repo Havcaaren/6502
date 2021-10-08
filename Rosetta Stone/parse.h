@@ -5,10 +5,13 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include <sstream>
 
+typedef enum {
+    ORG
+} Sym;
 
 struct OP {
-
     unsigned char op = 0;
     unsigned char val = 0;
     unsigned char reg = 0;
@@ -21,6 +24,7 @@ struct OP {
                 unsigned char reg = 0, int address = 0,
                 bool need_reg = false, bool need_address = false,
                 bool need_val = false);
+
 };
 
 class parse {

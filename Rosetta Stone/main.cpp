@@ -14,7 +14,8 @@ int main(int argc, char** argv) {
         return -2;
     }
     in.close();
-    
+
+    /*
     try {
         parse ps("..\\test.casm");
         ps.find_org();
@@ -24,6 +25,6 @@ int main(int argc, char** argv) {
     } catch (std::invalid_argument& e) {
         std::cerr<<e.what()<<std::endl;
         return -3;
-    }
+    }*/
     return 0;
 }

@@ -1,7 +1,7 @@
-Compiler/.idea/
-Compiler/CMakeLists.txt
-Compiler/cmake*
-Compiler/*.exe
-Compiler/*.bin
+Rosetta\ Stone/.idea/
+Rosetta\ Stone/CMakeLists.txt
+Rosetta\ Stone/cmake*
+Rosetta\ Stone/*.exe
+Rosetta\ Stone/*.bin
 *.ods*
 datasheets
