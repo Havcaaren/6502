@@ -15,7 +15,7 @@ struct OP {
     bool need_val = false;
 
     explicit OP(unsigned char op);
-    OP(unsigned char op, bool v, char val);
+    OP(unsigned char op, bool v, unsigned char val);
     OP(unsigned char op, int add, bool a);
 };
 
@@ -30,10 +30,12 @@ private:
     void find_labels();
     static unsigned char reg(const std::string&);
     int search_label(const std::string&);
+    bool is_label(std::string);
+    bool is_reg(const std::string&);
 public:
     explicit Rosetta_Stone(const std::string&);
     ~Rosetta_Stone();
-    void start();
+    void parse();
     void print() const;
 };
 

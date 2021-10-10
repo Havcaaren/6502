@@ -15,16 +15,14 @@ int main(int argc, char** argv) {
     }
     in.close();
 
-    /*
+
     try {
-        Rosett_Stone ps("..\\test.casm");
-        ps.find_org();
-        ps.find_labels();
+        Rosetta_Stone ps("..\\test.casm");
+        ps.parse();
         ps.print();
-        ps.start();
     } catch (std::invalid_argument& e) {
         std::cerr<<e.what()<<std::endl;
         return -3;
-    }*/
+    }
     return 0;
 }
