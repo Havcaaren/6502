@@ -4,7 +4,7 @@
 ### Registers  
 74LS273 - [register]  
 74LS245 - [buffer]  
-8bit (-127 to 128). 3 main registers (X, Y, Z) + ACC.  
+8bit (-127 to 128). 3 main registers (X, Y) + ACC.  
 Func.: Load from bus and output to bus. Clear register.   
 
 ### Program Counter and ROM  
