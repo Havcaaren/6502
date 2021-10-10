@@ -3,5 +3,6 @@ Rosetta\ Stone/CMakeLists.txt
 Rosetta\ Stone/cmake*
 Rosetta\ Stone/*.exe
 Rosetta\ Stone/*.bin
+Rosetta\ Stone/*.hex
 *.ods*
 datasheets
