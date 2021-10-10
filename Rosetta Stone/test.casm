@@ -1,11 +1,19 @@
-.org 0200
+.org 0250
 
     CLR ACC
 L2: CALL L1
     CMP X
     JN L2
     OUT ACC
+    MOV X Y
+    MOV X ACC
+    MOV Y X
+    MOV Y ACC
+    MOV ACC X
     MOV ACC Y
+    ADD 50
+    ANA X
+    OR $2010
     NOP
     HLT
 

@@ -24,19 +24,21 @@ private:
     int org;
     std::list<std::pair<std::string, int>>* labels;
     std::ifstream in;
-    std::list<OP*>* out;
+    std::list<OP*>* op_list;
+    std::ofstream out;
 private:
     void find_org();
     void find_labels();
     static unsigned char reg(const std::string&);
     int search_label(const std::string&);
     bool is_label(std::string);
-    bool is_reg(const std::string&);
+    static bool is_reg(const std::string&);
 public:
     explicit Rosetta_Stone(const std::string&);
     ~Rosetta_Stone();
     void parse();
     void print() const;
+    void create_hex();
 };
 
 #endif //COMPILER_PARSE_H
