@@ -5,12 +5,12 @@ L2: CALL L1
     CMP X
     JN L2
     OUT ACC
-    MOV ACC, Y
+    MOV ACC Y
     NOP
     HLT
 
 L1:
-    LDR X, $0102
+    LDR X $0102
     SUB 20
     ADD X
     RET
