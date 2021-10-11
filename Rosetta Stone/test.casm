@@ -13,7 +13,9 @@ L2: CALL L1
     MOV ACC Y
     ADD 50
     ANA X
-    OR $2010
+    OR 20
+    NOT ACC
+    XOR Y
     NOP
     HLT
 

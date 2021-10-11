@@ -201,10 +201,9 @@ void Rosetta_Stone::parse() {
                             y = 1;
                         }
                         op = new OP(112 + 2 * x + y - 1);
-                    } else if (s == "AND") {
+                    } else if (s == "ANA") {
                         ss >> s;
-                        if (is_reg(s)) {
-                            ss >> s;
+                        if (!is_reg(s)) {
                             op = new OP(131, true,
                                         std::stoi(s, nullptr, 16));
                         } else {
@@ -212,8 +211,7 @@ void Rosetta_Stone::parse() {
                         }
                     } else if (s == "OR") {
                         ss >> s;
-                        if (is_reg(s)) {
-                            ss >> s;
+                        if (!is_reg(s)) {
                             op = new OP(135, true,
                                         std::stoi(s, nullptr, 16));
                         } else {
@@ -221,8 +219,7 @@ void Rosetta_Stone::parse() {
                         }
                     } else if (s == "XOR") {
                         ss >> s;
-                        if (is_reg(s)) {
-                            ss >> s;
+                        if (!is_reg(s)) {
                             op = new OP(147, true,
                                         std::stoi(s, nullptr, 16));
                         } else {
@@ -230,8 +227,7 @@ void Rosetta_Stone::parse() {
                         }
                     } else if (s == "NOT") {
                         ss >> s;
-                        if (is_reg(s)) {
-                            ss >> s;
+                        if (!is_reg(s)) {
                             op = new OP(151, true,
                                         std::stoi(s, nullptr, 16));
                         } else {
