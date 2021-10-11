@@ -33,6 +33,7 @@ private:
     int search_label(const std::string&);
     bool is_label(std::string);
     static bool is_reg(const std::string&);
+    void multiple_labels_control();
 public:
     explicit Rosetta_Stone(const std::string&);
     ~Rosetta_Stone();

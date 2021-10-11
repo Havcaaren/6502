@@ -92,9 +92,21 @@ bool Rosetta_Stone::is_reg(const std::string& s) {
     return false;
 }
 
+void Rosetta_Stone::multiple_labels_control() {
+    for (const auto& i: *labels) {
+        for (const auto& j: *labels) {
+            if (i.first == j.first) {
+                std::string a = "Found multiple labels with same name " + i.first + "\n";
+                throw std::invalid_argument(a);
+            }
+        }
+    }
+}
+
 void Rosetta_Stone::parse() {
-    find_org();
-    find_labels();
+    this->find_org();
+    this->find_labels();
+    this->multiple_labels_control();
     in.seekg(0, std::ifstream::beg);
     std::stringstream ss;
     ss << in.rdbuf();

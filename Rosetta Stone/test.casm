@@ -24,3 +24,7 @@ L1:
     SUB 20
     ADD X
     RET
+
+L5: LS:
+L8:
+Ldsadas: L1:
