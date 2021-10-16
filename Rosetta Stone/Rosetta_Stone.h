@@ -7,6 +7,11 @@
 #include <iostream>
 #include <sstream>
 
+//TODO: OP MOV X Y -> MOV X, Y
+//TODO: Better parser?
+//TODO: -O3 ????
+//TODO: Maybe add more complex OP that will be transited to simple OP
+
 struct OP {
     unsigned char op = 0;
     unsigned char val = 0;
