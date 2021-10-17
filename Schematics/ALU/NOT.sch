@@ -7772,7 +7772,7 @@ In this library the device names are the same as the pin names of the symbols, t
 <plain>
 <text x="166.116" y="25.908" size="5.08" layer="94">NOT logic module</text>
 <text x="175.26" y="17.78" size="2.54" layer="94">NOT</text>
-<text x="195.58" y="7.62" size="2.54" layer="94">4.1</text>
+<text x="195.58" y="7.62" size="2.54" layer="94">4.2</text>
 <text x="259.08" y="7.62" size="2.54" layer="94">1</text>
 </plain>
 <instances>
