@@ -5,12 +5,12 @@ L2: CALL L1
     CMP X
     JN L2
     OUT ACC
-    MOV X Y
-    MOV X ACC
-    MOV Y X
-    MOV Y ACC
-    MOV ACC X
-    MOV ACC Y
+    MOV X, Y
+    MOV X, ACC
+    MOV Y, X
+    MOV Y, ACC
+    MOV ACC, X
+    MOV ACC, Y
     ADD 50
     ANA X
     OR 20
@@ -20,7 +20,7 @@ L2: CALL L1
     HLT
 
 L1:
-    LDR X $0102
+    LDR X, $0102
     SUB 20
     ADD X
     RET
