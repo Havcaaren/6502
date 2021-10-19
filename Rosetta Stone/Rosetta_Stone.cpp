@@ -1,18 +1,18 @@
 #include "Rosetta_Stone.h"
 
-Rosetta_Stone::Rosetta_Stone(const std::string& path) {
+Parser::Parser(const std::string& path) {
     in.open(path);
     labels = new std::list<std::pair<std::string, int>>;
     op_list = new std::list<OP*>;
     org = 0;
 }
 
-Rosetta_Stone::~Rosetta_Stone() {
+Parser::~Parser() {
     in.close();
 }
 
-void Rosetta_Stone::find_org() {
-    in.seekg(0, std::ifstream::beg);
+void Parser::find_org() {
+    in.seekg(std::ifstream::beg);
     std::string tmp;
     std::getline(in, tmp);
     size_t x = tmp.find(".org");
@@ -21,11 +21,11 @@ void Rosetta_Stone::find_org() {
         org = stoi(tmp, nullptr, 16);
     } else {
         org = 0;
-        in.seekg(0, std::ifstream::beg);
+        in.seekg(std::ifstream::beg);
     }
 }
 
-void Rosetta_Stone::find_labels() {
+void Parser::find_labels() {
     std::stringstream ss;
     ss << in.rdbuf();
     std::string s;
@@ -46,7 +46,7 @@ void Rosetta_Stone::find_labels() {
     }
 }
 
-unsigned char Rosetta_Stone::reg(const std::string& s) {
+unsigned char Parser::reg(const std::string& s) {
     if (s == "X") {
         return 0;
     } else if (s == "Y") {
@@ -58,7 +58,7 @@ unsigned char Rosetta_Stone::reg(const std::string& s) {
     throw std::invalid_argument(a);
 }
 
-int Rosetta_Stone::search_label(const std::string& s) {
+int Parser::search_label(const std::string& s) {
     for (const auto& i: *labels) {
         if (i.first == s) {
             return i.second;
@@ -68,7 +68,7 @@ int Rosetta_Stone::search_label(const std::string& s) {
     throw std::invalid_argument(a);
 }
 
-bool Rosetta_Stone::is_label(std::string s) {
+bool Parser::is_label(std::string s) {
     s = s.substr(0, s.size() - 1);
     bool a = false;
     for (const auto& i: *labels) {
@@ -83,7 +83,7 @@ bool Rosetta_Stone::is_label(std::string s) {
     return false;
 }
 
-bool Rosetta_Stone::is_reg(const std::string& s) {
+bool Parser::is_reg(const std::string& s) {
     if (s.find('X') != std::string::npos ||
         s.find('Y') != std::string::npos ||
         s.find("ACC") != std::string::npos) {
@@ -92,7 +92,7 @@ bool Rosetta_Stone::is_reg(const std::string& s) {
     return false;
 }
 
-void Rosetta_Stone::multiple_labels_control() {
+void Parser::multiple_labels_control() {
     for (const auto& i: *labels) {
         for (const auto& j: *labels) {
             if (i.first == j.first) {
@@ -103,7 +103,7 @@ void Rosetta_Stone::multiple_labels_control() {
     }
 }
 
-void Rosetta_Stone::parse() {
+void Parser::parse() {
     this->find_org();
     this->find_labels();
     this->multiple_labels_control();
@@ -258,7 +258,7 @@ void Rosetta_Stone::parse() {
     }
 }
 
-void Rosetta_Stone::print() const {
+void Parser::print() const {
     std::cout<<"Org "<<org<<"\n";
     std::cout<<"Labels:\n";
     for (const auto& i: *labels) {
@@ -270,27 +270,64 @@ void Rosetta_Stone::print() const {
     }
 }
 
-void Rosetta_Stone::create_hex() {
-    out.open("out.hex", std::ios::binary | std::ios::out);
-    out.write((char *)&(org), 2);
-    for (auto i: *op_list) {
-        if (!i->need_val && !i->need_address) {
-            out.write((char *)&(i->op), 1);
-        } else if (i->need_val) {
-            out.write((char *)&(i->op), 1);
-            out.write((char *)&(i->val), 1);
-        } else {
-            out.write((char *)&(i->op), 1);
-            out.write((char *)&(i->address), 2);
-        }
-    }
-    out.close();
+std::list<std::pair<std::string, int>> *Parser::getLabels() const {
+    return labels;
 }
+
+void Parser::setLabels(std::list<std::pair<std::string, int>> *l) {
+    Parser::labels = l;
+}
+
+std::list<OP *> *Parser::getOpList() const {
+    return op_list;
+}
+
+void Parser::setOpList(std::list<OP *> *opList) {
+    op_list = opList;
+}
+
+//void Parser::create_hex() {
+//    out.open("out.hex", std::ios::binary | std::ios::out);
+//    out.write((char *)&(org), 2);
+//    for (auto i: *op_list) {
+//        if (!i->need_val && !i->need_address) {
+//            out.write((char *)&(i->op), 1);
+//        } else if (i->need_val) {
+//            out.write((char *)&(i->op), 1);
+//            out.write((char *)&(i->val), 1);
+//        } else {
+//            out.write((char *)&(i->op), 1);
+//            out.write((char *)&(i->address), 2);
+//        }
+//    }
+//    out.close();
+//}
 
 OP::OP(unsigned char op) : op(op) {}
 
 OP::OP(unsigned char op, bool v, unsigned char val)
-      : op(op), val(val), need_val(v) {}
+        : op(op), val(val), need_val(v) {}
 
 OP::OP(unsigned char op, int add, bool a)
-      : op(op), address(add), need_address(a) {}
+        : op(op), address(add), need_address(a) {}
+
+
+Rosetta_Stone::Rosetta_Stone(const std::string &in) : Parser(in) {
+    parse();
+    print();
+}
+
+void Rosetta_Stone::find_double_op() {
+    OP* last = nullptr;
+    std::list<OP*>* lt= getOpList();
+    for (auto* i: *lt) {
+        if (last != nullptr) {
+            if (i->op == last->op) {
+                if (i->op != 20) {
+                    lt->remove(last);
+                }
+            }
+        }
+        last = i;
+    }
+}
