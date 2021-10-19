@@ -12,7 +12,7 @@ L2: CALL L1
     MOV ACC, X
     MOV ACC, Y
     ADD 50
-    ANA X
+    AND X
     OR 20
     NOT ACC
     XOR Y

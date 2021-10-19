@@ -213,7 +213,7 @@ void Parser::parse() {
                             y = 1;
                         }
                         op = new OP(112 + 2 * x + y - 1);
-                    } else if (s == "ANA") {
+                    } else if (s == "AND") {
                         ss >> s;
                         if (!is_reg(s)) {
                             op = new OP(131, true,
