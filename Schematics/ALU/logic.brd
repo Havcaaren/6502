@@ -82,6 +82,7 @@
 <dimension x1="0" y1="0" x2="53.574" y2="0" x3="26.787" y3="-3.81" textsize="1.778" layer="20" dtype="horizontal"/>
 <dimension x1="40.386" y1="57.277" x2="13.716" y2="57.277" x3="27.051" y3="62.23" textsize="1.778" layer="20" dtype="horizontal"/>
 <dimension x1="13.716" y1="57.277" x2="23.876" y2="2.667" x3="-7.62" y3="29.972" textsize="1.778" layer="20" dtype="vertical"/>
+<dimension x1="23.876" y1="2.667" x2="0" y2="2.667" x3="11.938" y3="-7.62" textsize="1.778" layer="20"/>
 </plain>
 <libraries>
 <library name="pinhead" urn="urn:adsk.eagle:library:325">
