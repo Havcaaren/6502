@@ -317,13 +317,17 @@ Rosetta_Stone::Rosetta_Stone(const std::string &in) : Parser(in) {
     print();
 }
 
+void Rosetta_Stone::find_double_add_sub() {
+
+}
+
 void Rosetta_Stone::find_double_op() {
     OP* last = nullptr;
     std::list<OP*>* lt= getOpList();
     for (auto* i: *lt) {
         if (last != nullptr) {
             if (i->op == last->op) {
-                if (i->op != 20) {
+                if (i->op != 20 && i->op != 0) {
                     lt->remove(last);
                 }
             }

@@ -58,5 +58,6 @@ public:
 class Rosetta_Stone : public Parser {
 public:
     explicit Rosetta_Stone(const std::string &unnamed);
+    void find_double_add_sub();
     void find_double_op();
 };
