@@ -14,13 +14,22 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
+
+class Logger {
+private:
+    std::list<std::string>* m_log = new std::list<std::string>;
+public:
+    void addLog(const std::string&);
+    void output();
+};
 
 struct OP {
-    unsigned char op = 0;
-    unsigned char val = 0;
+    unsigned char opcode = 0;
+    unsigned char value = 0;
     int address = 0;
-    bool need_address = false;
-    bool need_val = false;
+    bool needAddress = false;
+    bool needValue = false;
 
     explicit OP(unsigned char op);
     OP(unsigned char op, bool v, unsigned char val);
@@ -29,19 +38,20 @@ struct OP {
 
 class Parser {
 private:
-    int org;
-    std::list<std::pair<std::string, int>>* labels;
-    std::ifstream in;
-    std::list<OP*>* op_list;
+    Logger* logger;
+    int m_org = 0;
+    std::list<std::pair<std::string, int>>* m_labels;
+    std::ifstream m_in;
+    std::list<OP*>* m_opList;
     //std::ofstream out;
-private:
-    void find_org();
-    void find_labels();
-    static unsigned char reg(const std::string&);
-    int search_label(const std::string&);
+public:
+    void findOrg();
+    bool labelExist(const std::string&);
+    static int registerNumber(const std::string&);
+    void findLabels();
+    int searchLabel(const std::string&);
     bool is_label(std::string);
-    static bool is_reg(const std::string&);
-    void multiple_labels_control();
+
 public:
     std::list<std::pair<std::string, int>>* getLabels() const;
     void setLabels(std::list<std::pair<std::string, int>>*);
