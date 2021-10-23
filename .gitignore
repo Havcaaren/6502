@@ -7,3 +7,4 @@ Rosetta\ Stone/*.hex
 *.ods*
 datasheets
 *.gch
+.vscode/
