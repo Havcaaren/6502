@@ -5,6 +5,4 @@ Rosetta\ Stone/*.exe
 Rosetta\ Stone/*.bin
 Rosetta\ Stone/*.hex
 *.ods*
-datasheets
 *.gch
-.vscode/
