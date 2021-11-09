@@ -21,18 +21,6 @@ OP::OP(unsigned char op, int add, bool a)
 OP::OP(unsigned char op, bool v, unsigned char val)
         : opcode(op), value(val), needValue(v) {}
 
-
-Parser::Parser(const std::string& fp) {
-    m_in.open(fp);
-    m_labels = new std::list<std::pair<std::string, int>>;
-    m_opList = new std::list<OP*>;
-    logger = new Logger();
-}
-
-Parser::~Parser() {
-    m_in.close();
-}
-
 void Parser::findOrg() {
     m_in.seekg(0, std::fstream::beg);
 
@@ -61,8 +49,7 @@ bool Parser::labelExist(const std::string& s) {
     if (std::any_of(m_labels->begin(),
                     m_labels->end(),
                     [&](const std::pair<std::string, int>& i) {
-                        return i.first == s; }
-    )){
+                        return i.first == s; } )) {
         return true;
     }
     return false;
@@ -111,5 +98,32 @@ int Parser::searchLabel(const std::string& s) {
             return i.second;
         }
     }
-    throw std::invalid_argument("EE");
+    throw std::invalid_argument("Label not found.");
+}
+
+bool Parser::isLabel(const std::string& s) {
+    return searchLabel(s);
+}
+
+std::list<std::pair<std::string, int>>* Parser::getLabels() const {
+    return m_labels;
+}
+
+std::list<OP*>* Parser::getOpList() const {
+    return m_opList;
+}
+
+Parser::Parser(const std::string& fp) {
+    m_in.open(fp, std::ios::in);
+    m_labels = new std::list<std::pair<std::string, int>>;
+    m_opList = new std::list<OP*>;
+    logger = new Logger();
+}
+
+Parser::~Parser() {
+    m_in.close();
+}
+
+void Parser::parse() {
+
 }

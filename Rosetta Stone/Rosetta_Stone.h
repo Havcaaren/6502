@@ -16,6 +16,13 @@
 #include <iostream>
 #include <algorithm>
 
+enum {
+    NOP = 0, CLR = 1, OUT = 4, CMP = 16, CALL = 20, ST = 21,
+    JZ = 32, JNZ = 33, JN = 34, JL = 35, JG = 36, JE = 37,
+    RET = 38, HLT = 39, ADD = 48, SUB = 64, LDR = 80, MOV = 96,
+    AND = 112, OR = 116, XOR = 128, NOT = 132
+} OP_NUM;
+
 class Logger {
 private:
     std::list<std::string>* m_log = new std::list<std::string>;
@@ -44,24 +51,22 @@ private:
     std::ifstream m_in;
     std::list<OP*>* m_opList;
     //std::ofstream out;
-public:
+private:
     void findOrg();
     bool labelExist(const std::string&);
     static int registerNumber(const std::string&);
     void findLabels();
     int searchLabel(const std::string&);
-    bool is_label(std::string);
-
+    bool isLabel(const std::string&);
+    void toUpper();
 public:
     std::list<std::pair<std::string, int>>* getLabels() const;
-    void setLabels(std::list<std::pair<std::string, int>>*);
     std::list<OP*>* getOpList() const;
-    void setOpList(std::list<OP*>*);
 
     explicit Parser(const std::string&);
     ~Parser();
     void parse();
-    void print() const;
+    //void print() const;
     //void create_hex();
 };
 
