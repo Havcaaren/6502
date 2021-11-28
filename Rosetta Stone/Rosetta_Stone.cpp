@@ -6,7 +6,7 @@ void Logger::addLog(const std::string& s) {
 
 void Logger::output() {
     std::ofstream of;
-    of.open("m_log.txt", std::ios::out);
+    of.open("Log.txt", std::ios::out);
     for (const auto& i: *m_log) {
         of << i << "\n";
     }
@@ -66,15 +66,19 @@ int Parser::registerNumber(const std::string& s) {
     return -1;
 }
 
+int Parser::opSize(std::string s) {
+    std::stringstream ss;
+    ss << s;
+    int size = 0;
+    return size;
+}
+
 void Parser::findLabels() {
     m_in.seekg(0, std::fstream::beg);
 
-    std::stringstream ss;
-    ss << m_in.rdbuf();
     std::string s;
     size_t x = 0;
-    while (ss.good()) {
-        ss >> s;
+    while (std::getline(m_in, s)) {
         x = s.find(':');
         if (x != std::string::npos) {
             s = s.substr(0, x);
@@ -84,8 +88,8 @@ void Parser::findLabels() {
                 throw std::invalid_argument("Found labels with same name.");
             }
             m_labels->emplace_back(s, m_org);
-        } else if (registerNumber(s) == -1) {
-            m_org += 2;
+        } else if (registerNumber(s) != -1) {
+            continue;
         }
     }
 

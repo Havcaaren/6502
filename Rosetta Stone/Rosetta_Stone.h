@@ -55,14 +55,14 @@ private:
     void findOrg();
     bool labelExist(const std::string&);
     static int registerNumber(const std::string&);
+    int opSize(std::string);
     void findLabels();
     int searchLabel(const std::string&);
     bool isLabel(const std::string&);
-    void toUpper();
 public:
     std::list<std::pair<std::string, int>>* getLabels() const;
     std::list<OP*>* getOpList() const;
-
+    Parser() = delete;
     explicit Parser(const std::string&);
     ~Parser();
     void parse();

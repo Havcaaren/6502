@@ -17,8 +17,8 @@ int main(int argc, char** argv) {
 
 
     Parser ps("..\\test.asm");
-    ps.findOrg();
-    ps.findLabels();
+//    ps.findOrg();
+//    ps.findLabels();
 
 //    try {
 //        Parser ps(argv[1]);
