@@ -16,13 +16,6 @@
 #include <iostream>
 #include <algorithm>
 
-enum {
-    NOP = 0, CLR = 1, OUT = 4, CMP = 16, CALL = 20, ST = 21,
-    JZ = 32, JNZ = 33, JN = 34, JL = 35, JG = 36, JE = 37,
-    RET = 38, HLT = 39, ADD = 48, SUB = 64, LDR = 80, MOV = 96,
-    AND = 112, OR = 116, XOR = 128, NOT = 132
-} OP_NUM;
-
 class Logger {
 private:
     std::list<std::string>* m_log = new std::list<std::string>;
@@ -30,6 +23,41 @@ public:
     void addLog(const std::string&);
     void output();
 };
+
+enum class token_type {
+    OPCODE, REGISTER, ADDRESS, LABEL, NUMBER, ORG
+};
+
+struct Token {
+    token_type type;
+    unsigned char m_opcode;
+    int m_register;
+    int m_address;
+    std::string m_label;
+    unsigned char m_number;
+};
+
+class Lexer {
+private:
+    std::ifstream m_in;
+    std::list<std::string> m_OP_codes = {
+            "NOP", "CLR", "OUT", "CMP", "CALL", "ST",
+            "JZ", "JNZ", "JN", "JL", "JG", "JE", "RET",
+            "HLT", "ADD", "SUB", "LDR", "MOV", "AND",
+            "OR", "XOR", "NOT"};
+    std::list<Token*>* m_tokens;
+public:
+    Lexer(const std::string&);
+    ~Lexer();
+    void tokenized();
+};
+
+enum {
+    NOP = 0, CLR = 1, OUT = 4, CMP = 16, CALL = 20, ST = 21,
+    JZ = 32, JNZ = 33, JN = 34, JL = 35, JG = 36, JE = 37,
+    RET = 38, HLT = 39, ADD = 48, SUB = 64, LDR = 80, MOV = 96,
+    AND = 112, OR = 116, XOR = 128, NOT = 132
+} OP_NUM;
 
 struct OP {
     unsigned char opcode = 0;

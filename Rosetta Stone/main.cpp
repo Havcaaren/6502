@@ -17,6 +17,8 @@ int main(int argc, char** argv) {
 
 
     Parser ps("..\\test.asm");
+    Lexer lx("..\\test.asm");
+    lx.tokenized();
 //    ps.findOrg();
 //    ps.findLabels();
 

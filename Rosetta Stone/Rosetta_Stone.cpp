@@ -13,6 +13,29 @@ void Logger::output() {
     of.close();
 }
 
+Lexer::Lexer(const std::string& fd) {
+    m_tokens = new std::list<Token*>;
+    m_in.open(fd);
+}
+
+Lexer::~Lexer() {
+    delete m_tokens;
+}
+
+void Lexer::tokenized() {
+    std::string buffer;
+    std::stringstream ss;
+    ss << m_in.rdbuf();
+    std::list<std::string> file;
+    while (ss.good()) {
+        
+    }
+
+}
+
+
+
+
 OP::OP(unsigned char op) : opcode(op) {}
 
 OP::OP(unsigned char op, int add, bool a)
