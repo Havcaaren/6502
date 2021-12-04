@@ -47,8 +47,12 @@ private:
             "OR", "XOR", "NOT"};
     std::list<Token*>* m_tokens;
 public:
-    Lexer(const std::string&);
+    explicit Lexer(const std::string&);
     ~Lexer();
+    bool isOpcode(const std::string&);
+    bool isRegister(std::string);
+    bool isAddress(std::string);
+    bool isNumber(std::string);
     void tokenized();
 };
 

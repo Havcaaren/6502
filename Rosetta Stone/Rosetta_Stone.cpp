@@ -22,11 +22,19 @@ Lexer::~Lexer() {
     delete m_tokens;
 }
 
+bool Lexer::isOpcode(const std::string& s) {
+    if (std::any_of(m_OP_codes.begin(),
+                    m_OP_codes.end(),
+                    [&](const std::string& i) {return i == s;})) {
+        return true;
+    }
+    return false;
+}
+
 void Lexer::tokenized() {
     std::string buffer;
     std::stringstream ss;
     ss << m_in.rdbuf();
-    std::list<std::string> file;
     while (ss.good()) {
         
     }
