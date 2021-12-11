@@ -15,11 +15,14 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <map>
 
 class Logger {
 private:
-    std::list<std::string>* m_log = new std::list<std::string>;
+    std::list<std::string>* m_log;
 public:
+    Logger();
+    ~Logger();
     void addLog(const std::string&);
     void output();
 };
@@ -35,76 +38,27 @@ struct Token {
     int m_address;
     std::string m_label;
     unsigned char m_number;
+    int m_size;
 };
 
 class Lexer {
 private:
+    Logger* m_logger;
     std::ifstream m_in;
-    std::list<std::string> m_OP_codes = {
-            "NOP", "CLR", "OUT", "CMP", "CALL", "ST",
-            "JZ", "JNZ", "JN", "JL", "JG", "JE", "RET",
-            "HLT", "ADD", "SUB", "LDR", "MOV", "AND",
-            "OR", "XOR", "NOT"};
+    std::map<std::string, int> m_OP_codes;
+    std::list<std::string> m_file;
     std::list<Token*>* m_tokens;
 public:
     explicit Lexer(const std::string&);
     ~Lexer();
+    void split();
     bool isOpcode(const std::string&);
-    bool isRegister(std::string);
-    bool isAddress(std::string);
-    bool isNumber(std::string);
+    int getOpcodeNumber(const std::string&);
+    static bool isRegister(const std::string&);
+    static int getRegisterNumber(const std::string&);
+    static bool isAddress(const std::string&);
+    static bool isNumber(const std::string&);
+    bool isLabel(const std::string&);
     void tokenized();
 };
 
-enum {
-    NOP = 0, CLR = 1, OUT = 4, CMP = 16, CALL = 20, ST = 21,
-    JZ = 32, JNZ = 33, JN = 34, JL = 35, JG = 36, JE = 37,
-    RET = 38, HLT = 39, ADD = 48, SUB = 64, LDR = 80, MOV = 96,
-    AND = 112, OR = 116, XOR = 128, NOT = 132
-} OP_NUM;
-
-struct OP {
-    unsigned char opcode = 0;
-    unsigned char value = 0;
-    int address = 0;
-    bool needAddress = false;
-    bool needValue = false;
-
-    explicit OP(unsigned char op);
-    OP(unsigned char op, bool v, unsigned char val);
-    OP(unsigned char op, int add, bool a);
-};
-
-class Parser {
-private:
-    Logger* logger;
-    int m_org = 0;
-    std::list<std::pair<std::string, int>>* m_labels;
-    std::ifstream m_in;
-    std::list<OP*>* m_opList;
-    //std::ofstream out;
-private:
-    void findOrg();
-    bool labelExist(const std::string&);
-    static int registerNumber(const std::string&);
-    int opSize(std::string);
-    void findLabels();
-    int searchLabel(const std::string&);
-    bool isLabel(const std::string&);
-public:
-    std::list<std::pair<std::string, int>>* getLabels() const;
-    std::list<OP*>* getOpList() const;
-    Parser() = delete;
-    explicit Parser(const std::string&);
-    ~Parser();
-    void parse();
-    //void print() const;
-    //void create_hex();
-};
-
-class Rosetta_Stone : public Parser {
-public:
-    explicit Rosetta_Stone(const std::string &unnamed);
-    void find_double_add_sub();
-    void find_double_op();
-};

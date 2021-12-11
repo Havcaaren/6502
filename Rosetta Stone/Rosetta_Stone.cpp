@@ -1,5 +1,13 @@
 #include "Rosetta_Stone.h"
 
+Logger::Logger() {
+    m_log = new std::list<std::string>;
+}
+
+Logger::~Logger() {
+    delete m_log;
+}
+
 void Logger::addLog(const std::string& s) {
     m_log->push_back(s);
 }
@@ -13,152 +21,139 @@ void Logger::output() {
     of.close();
 }
 
+
+
 Lexer::Lexer(const std::string& fd) {
     m_tokens = new std::list<Token*>;
     m_in.open(fd);
+    m_logger = new Logger;
+    m_OP_codes["NOP"]  = 0;
+    m_OP_codes["CLR"]  = 1;
+    m_OP_codes["OUT"]  = 4;
+    m_OP_codes["CMP"]  = 16;
+    m_OP_codes["CALL"] = 20;
+    m_OP_codes["ST"]   = 21;
+    m_OP_codes["JZ"]   = 32;
+    m_OP_codes["JNZ"]  = 33;
+    m_OP_codes["JN"]   = 34;
+    m_OP_codes["JL"]   = 35;
+    m_OP_codes["JG"]   = 36;
+    m_OP_codes["JE"]   = 37;
+    m_OP_codes["RET"]  = 38;
+    m_OP_codes["HLT"]  = 39;
+    m_OP_codes["ADD"]  = 48;
+    m_OP_codes["SUB"]  = 64;
+    m_OP_codes["LDR"]  = 80;
+    m_OP_codes["MOV"]  = 96;
+    m_OP_codes["AND"]  = 112;
+    m_OP_codes["OR"]   = 116;
+    m_OP_codes["XOR"]  = 128;
+    m_OP_codes["NOT"]  = 132;
 }
 
 Lexer::~Lexer() {
     delete m_tokens;
 }
 
-bool Lexer::isOpcode(const std::string& s) {
-    if (std::any_of(m_OP_codes.begin(),
-                    m_OP_codes.end(),
-                    [&](const std::string& i) {return i == s;})) {
-        return true;
+void Lexer::split() {
+    std::string buffer((std::istreambuf_iterator<char>(m_in)),
+                       (std::istreambuf_iterator<char>()));
+    unsigned int file_size = buffer.length();
+    for (int i = 0; i < file_size - 1; ++i) {
+        if (buffer[i] == '\n') {
+            buffer[i] = ' ';
+            i--;
+        }
+        if (buffer[i] == ',') {
+            buffer[i] = ' ';
+            i--;
+        }
+        if (buffer[i] == ' ' && buffer[i + 1] == ' ') {
+            buffer.erase(i + 1, 1);
+            i--;
+        }
     }
-    return false;
+    buffer.shrink_to_fit();
+    for (int i = 0; i < buffer.length(); ++i) {
+        if (i == buffer.length() - 1) {
+            m_file.push_back(buffer.substr(0, buffer.length()));
+        } else if (buffer[i] == ' ') {
+            m_file.push_back(buffer.substr(0, i));
+            buffer.erase(0, i + 1);
+            i = 0;
+        }
+    }
+}
+
+bool Lexer::isOpcode(const std::string& s) {
+    return (m_OP_codes.find(s) != m_OP_codes.end());
+}
+
+int Lexer::getOpcodeNumber(const std::string& s) {
+    return m_OP_codes[s];
+}
+
+bool Lexer::isRegister(const std::string& s) {
+    return (s == "X" || s == "Y" || s == "ACC");
+}
+
+int Lexer::getRegisterNumber(const std::string& s) {
+    if (s == "X") {
+        return 0;
+    }
+    if (s == "Y") {
+        return 1;
+    }
+    return 2;
+}
+
+bool Lexer::isAddress(const std::string& s) {
+    return (s.find('&') != std::string::npos);
+}
+
+bool Lexer::isLabel(const std::string& s) {
+    return (s.find(':') != std::string::npos);
+}
+
+bool Lexer::isNumber(const std::string& s) {
+    return (s[0] >= 48 && s[0] <= 57);
 }
 
 void Lexer::tokenized() {
-    std::string buffer;
-    std::stringstream ss;
-    ss << m_in.rdbuf();
-    while (ss.good()) {
-        
-    }
-
-}
-
-
-
-
-OP::OP(unsigned char op) : opcode(op) {}
-
-OP::OP(unsigned char op, int add, bool a)
-        : opcode(op), address(add), needAddress(a) {}
-
-OP::OP(unsigned char op, bool v, unsigned char val)
-        : opcode(op), value(val), needValue(v) {}
-
-void Parser::findOrg() {
-    m_in.seekg(0, std::fstream::beg);
-
-    std::stringstream ss;
-    ss << m_in.rdbuf();
-    std::string s;
-    while (ss.good()) {
-        ss >> s;
-        if (s == ".org") {
-            ss >> s;
-            m_org = std::stoi(s, nullptr, 16);
-            s = "Found .org" + std::to_string(m_org);
-            logger->addLog(s);
-            break;
-        }
-    }
-    if (m_org == 0) {
-        s = "Did not find .org. org = 0.";
-        logger->addLog(s);
-    }
-
-    m_in.seekg(0, std::fstream::beg);
-}
-
-bool Parser::labelExist(const std::string& s) {
-    if (std::any_of(m_labels->begin(),
-                    m_labels->end(),
-                    [&](const std::pair<std::string, int>& i) {
-                        return i.first == s; } )) {
-        return true;
-    }
-    return false;
-}
-
-int Parser::registerNumber(const std::string& s) {
-    if (s == "X") {
-        return 0;
-    } else if (s == "Y") {
-        return 1;
-    } else if (s == "ACC") {
-        return 2;
-    }
-    return -1;
-}
-
-int Parser::opSize(std::string s) {
-    std::stringstream ss;
-    ss << s;
-    int size = 0;
-    return size;
-}
-
-void Parser::findLabels() {
-    m_in.seekg(0, std::fstream::beg);
-
-    std::string s;
-    size_t x = 0;
-    while (std::getline(m_in, s)) {
-        x = s.find(':');
-        if (x != std::string::npos) {
-            s = s.substr(0, x);
-            if (labelExist(s)) {
-                std::string tmp =  "Error: Found labels with same name. " + s;
-                logger->addLog(tmp);
-                throw std::invalid_argument("Found labels with same name.");
+    this->split();
+    Token* token = nullptr;
+    bool org = false;
+    for (const auto& i: m_file) {
+        if (!org) {
+            token = new Token;
+            if (isOpcode(i)) {
+                token->type = token_type::OPCODE;
+                token->m_opcode = getOpcodeNumber(i);
+            } else if (isRegister(i)) {
+                token->type = token_type::REGISTER;
+                token->m_register = getRegisterNumber(i);
+            } else if (isAddress(i)) {
+                token->type = token_type::ADDRESS;
+                token->m_address = std::stoi(i.substr(1, i.length()),
+                                             nullptr, 16);
+            } else if (isNumber(i)) {
+                token->type = token_type::NUMBER;
+                token->m_number = std::stoi(i, nullptr, 16);
+            } else if (isLabel(i)) {
+                token->type = token_type::LABEL;
+                token->m_label = i.substr(0, i.length()-1);
+            } else if (i == ".org") {
+                token->type = token_type::ORG;
+                org = true;
             }
-            m_labels->emplace_back(s, m_org);
-        } else if (registerNumber(s) != -1) {
-            continue;
+        } else {
+            token->m_address = std::stoi(i.substr(1, i.length()),
+                                         nullptr, 16);
+            org = false;
+        }
+        if (!org) {
+            m_tokens->push_back(token);
         }
     }
-
-    m_in.seekg(0, std::fstream::beg);
 }
 
-int Parser::searchLabel(const std::string& s) {
-    for (const auto& i: *m_labels) {
-        if (i.first == s) {
-            return i.second;
-        }
-    }
-    throw std::invalid_argument("Label not found.");
-}
-
-bool Parser::isLabel(const std::string& s) {
-    return searchLabel(s);
-}
-
-std::list<std::pair<std::string, int>>* Parser::getLabels() const {
-    return m_labels;
-}
-
-std::list<OP*>* Parser::getOpList() const {
-    return m_opList;
-}
-
-Parser::Parser(const std::string& fp) {
-    m_in.open(fp, std::ios::in);
-    m_labels = new std::list<std::pair<std::string, int>>;
-    m_opList = new std::list<OP*>;
-    logger = new Logger();
-}
-
-Parser::~Parser() {
-    m_in.close();
-}
-
-void Parser::parse() {
-
-}
