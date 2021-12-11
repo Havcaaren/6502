@@ -1,4 +1,4 @@
-.org 0250
+.org $0250
 
     CLR ACC
 L2: CALL L1
