@@ -17,24 +17,13 @@
 #include <algorithm>
 #include <map>
 
-class Logger {
-private:
-    std::list<std::string>* m_log;
-public:
-    Logger();
-    ~Logger();
-    void addLog(const std::string&);
-    void output();
-};
-
 enum class token_type {
-    OPCODE, REGISTER, ADDRESS, LABEL, NUMBER, ORG
+    OPCODE, ADDRESS, LABEL_TO, LABEL_FROM, NUMBER
 };
 
 struct Token {
     token_type type;
     unsigned char m_opcode;
-    int m_register;
     int m_address;
     std::string m_label;
     unsigned char m_number;
@@ -43,22 +32,48 @@ struct Token {
 
 class Lexer {
 private:
-    Logger* m_logger;
     std::ifstream m_in;
     std::map<std::string, int> m_OP_codes;
     std::list<std::string> m_file;
-    std::list<Token*>* m_tokens;
+    std::list<Token *> *m_tokens;
 public:
-    explicit Lexer(const std::string&);
+    explicit Lexer(const std::string &);
+
     ~Lexer();
+
     void split();
-    bool isOpcode(const std::string&);
-    int getOpcodeNumber(const std::string&);
-    static bool isRegister(const std::string&);
-    static int getRegisterNumber(const std::string&);
-    static bool isAddress(const std::string&);
-    static bool isNumber(const std::string&);
-    bool isLabel(const std::string&);
+
+    bool isOpcode(const std::string &);
+
+    int getOpcodeNumber(const std::string &);
+
+    static bool isAddress(const std::string &);
+
+    static bool isNumber(const std::string &);
+
+    static bool isLabel(const std::string &);
+
     void tokenized();
+
+    std::list<Token *> *getToken();
 };
 
+class Rosetta_Stone {
+private:
+    std::list<Token *> *m_tokens;
+    std::list<std::pair<Token *, int>> m_labels;
+    std::list<unsigned char>* m_file;
+    std::ofstream m_out;
+public:
+    Rosetta_Stone();
+
+    ~Rosetta_Stone();
+
+    void setTokens(std::list<Token *> *);
+
+    void findLabels();
+
+    void optimized();
+
+    void compile();
+};
