@@ -15,10 +15,12 @@ int main(int argc, char** argv) {
     }
     in.close();
 
-
-    Parser ps("..\\test.asm");
     Lexer lx("..\\test.asm");
     lx.tokenized();
+    Rosetta_Stone RS;
+    RS.setTokens(lx.getToken());
+    RS.findLabels();
+    std::cout<<"A";
 //    ps.findOrg();
 //    ps.findLabels();
 
