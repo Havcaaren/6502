@@ -9,7 +9,7 @@ L2: CALL L1
     MYA
     MAX
     MAY
-    ADD 50
+    ADV 50
     ANX
     OR 20
     NOA
@@ -19,7 +19,8 @@ L2: CALL L1
 
 L1:
     LDX $0102
-    SUB 20
+    SUR $1010
+    SUV 20
     ADX
     RET
 
