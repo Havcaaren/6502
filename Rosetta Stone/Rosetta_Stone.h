@@ -1,7 +1,7 @@
-//TODO: OP MOV X Y -> MOV X, Y
-//TODO: Better parser?
 //TODO: -O3 ????
-//TODO: Maybe add more complex OP that will be transited to simple OP
+//TODO: Control if Label exist
+//TODO: Compile
+//TODO: Optimized (ADV 20 \n ADV 20) -> ADV 40
 
 /*
  * Custom parser and compiler for custom 8bit CPU.
