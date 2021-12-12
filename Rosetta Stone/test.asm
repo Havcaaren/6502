@@ -1,28 +1,26 @@
-.org $0250
-
-    CLR ACC
+    CLA
 L2: CALL L1
-    CMP X
+    CMX
     JN L2
-    OUT ACC
-    MOV X, Y
-    MOV X, ACC
-    MOV Y, X
-    MOV Y, ACC
-    MOV ACC, X
-    MOV ACC, Y
+    OUA
+    MXY
+    MXA
+    MYX
+    MYA
+    MAX
+    MAY
     ADD 50
-    AND X
+    ANX
     OR 20
-    NOT ACC
-    XOR Y
+    NOA
+    XOY
     NOP
     HLT
 
 L1:
-    LDR X, $0102
+    LDX $0102
     SUB 20
-    ADD X
+    ADX
     RET
 
 L5: LS:
