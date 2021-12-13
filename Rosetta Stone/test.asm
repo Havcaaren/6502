@@ -11,7 +11,7 @@ L2: CALL L1
     MAY
     ADV 50
     ANX
-    OR 20
+    ORV 20
     NOA
     XOY
     NOP
