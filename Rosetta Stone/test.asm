@@ -1,10 +1,18 @@
+.data:
+A1
+TEMP
+line_count
+.program:
     CLA
 L2: CALL L1
     CMX
     JN L2
+    LDA 42
     OUA
+    STX A1
     MXY
     MXA
+    STA TEMP
     MYX
     MYA
     MAX
@@ -18,8 +26,8 @@ L2: CALL L1
     HLT
 
 L1:
-    LDX $0102
-    SUR $1010
+    LXR line_count
+    SUR TEMP
     SUV 20
     ADX
     RET

@@ -9,23 +9,24 @@
 
 #pragma once
 
-#include <cstdint>
 #include <list>
 #include <fstream>
-#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <map>
 
 enum class token_type {
-    OPCODE, ADDRESS, LABEL_TO, LABEL_FROM, NUMBER
+    OPCODE, ADDRESS, LABEL_TO, LABEL_FROM, NUMBER, VARIABLE
 };
 
 struct Token {
     token_type type;
     unsigned char m_opcode;
-    int m_address;
+    unsigned char m_addressL;
+    unsigned char m_addressH;
     std::string m_label;
+    std::string m_variable;
+    int m_var_pos;
     unsigned char m_number;
     int m_size;
 };
@@ -35,7 +36,8 @@ private:
     std::ifstream m_in;
     std::map<std::string, int> m_OP_codes;
     std::list<std::string> m_file;
-    std::list<Token *> *m_tokens;
+    std::list<Token *> *m_instructions;
+    std::list<Token*>* m_variables;
 public:
     explicit Lexer(const std::string &);
 
@@ -53,25 +55,38 @@ public:
 
     static bool isLabel(const std::string &);
 
+    bool isVariable(const std::string&);
+
     void tokenized();
 
-    std::list<Token *> *getToken();
+    std::list<Token *> *getInstructions();
+    std::list<Token*>* getVariables();
 };
 
 class Rosetta_Stone {
 private:
-    std::list<Token *> *m_tokens;
+    bool O3;
+    std::list<Token *> *m_instructions;
+    std::list<Token*>* m_variables;
     std::list<std::pair<Token *, int>> m_labels;
-    std::list<unsigned char>* m_file;
+    std::list<unsigned char> *m_file;
     std::ofstream m_out;
 public:
-    Rosetta_Stone();
+    explicit Rosetta_Stone(bool);
 
     ~Rosetta_Stone();
 
-    void setTokens(std::list<Token *> *);
+    void setInstructions(std::list<Token *> *);
+
+    void setVariables(std::list<Token*>*);
 
     void findLabels();
+
+    int labelPos(const std::string &);
+
+    static std::string addPadding(std::string);
+
+    static std::string toHex(int);
 
     void optimized();
 

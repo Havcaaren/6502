@@ -17,9 +17,11 @@ int main(int argc, char** argv) {
 
     Lexer lx("..\\test.asm");
     lx.tokenized();
-    Rosetta_Stone RS;
-    RS.setTokens(lx.getToken());
-    RS.findLabels();
+    Rosetta_Stone RS(false);
+    RS.setInstructions(lx.getInstructions());
+    RS.setVariables(lx.getVariables());
+    RS.optimized();
+    RS.compile();
     std::cout<<"A";
 //    ps.findOrg();
 //    ps.findLabels();
