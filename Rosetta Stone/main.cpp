@@ -7,19 +7,17 @@ int main(int argc, char** argv) {
         std::cout<<"No input file."<<std::endl;
         return -1;
     }
-    // "..\\test.asm" argv[1]
-    std::ifstream in("..\\test.asm");
-    if (!in.is_open()) {
-        std::cout<<"Cannot open file."<<std::endl;
-        return -2;
-    }
-    in.close();
 
+    bool opt = false;
+    if (argc == 2) {
+        opt = true;
+    }
+
+    // "..\\test.asm" argv[1]
     Lexer lx("..\\test.asm");
     lx.tokenized();
-    Rosetta_Stone RS(false);
+    Rosetta_Stone RS(opt);
     RS.setInstructions(lx.getInstructions());
-    RS.setVariables(lx.getVariables());
     RS.optimized();
     RS.compile();
     std::cout<<"A";

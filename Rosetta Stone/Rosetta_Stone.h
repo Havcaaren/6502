@@ -55,19 +55,17 @@ public:
 
     static bool isLabel(const std::string &);
 
-    bool isVariable(const std::string&);
+    int getVariablePos(const std::string &);
 
     void tokenized();
 
     std::list<Token *> *getInstructions();
-    std::list<Token*>* getVariables();
 };
 
 class Rosetta_Stone {
 private:
     bool O3;
     std::list<Token *> *m_instructions;
-    std::list<Token*>* m_variables;
     std::list<std::pair<Token *, int>> m_labels;
     std::list<unsigned char> *m_file;
     std::ofstream m_out;
@@ -77,8 +75,6 @@ public:
     ~Rosetta_Stone();
 
     void setInstructions(std::list<Token *> *);
-
-    void setVariables(std::list<Token*>*);
 
     void findLabels();
 

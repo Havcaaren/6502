@@ -117,19 +117,13 @@ bool Lexer::isNumber(const std::string &s) {
     return (s[0] >= 48 && s[0] <= 57);
 }
 
-bool Lexer::isVariable(const std::string &s) {
-    return (std::any_of(m_variables->begin(),
-                        m_variables->end(),
-                        [&](Token *t) {
-                            return (t->m_variable == s);
-                        }));
-//
-//    for (auto i: *m_variables) {
-//        if (i->m_variable == s) {
-//            return true;
-//        }
-//    }
-//    return false;
+int Lexer::getVariablePos(const std::string &s) {
+    for (auto i: *m_variables) {
+        if (i->m_variable == s) {
+            return i->m_var_pos;
+        }
+    }
+    throw std::invalid_argument("Var doesnt exist.\n");
 }
 
 void Lexer::tokenized() {
@@ -137,43 +131,52 @@ void Lexer::tokenized() {
     Token *token = nullptr;
     bool data = false;
     int ram_pos = 0;
-    for (const auto &i: m_file) {
-        if (i == ".data:") {
+    for (auto i = m_file.begin();
+         i != m_file.end();
+         i++) {
+        if (*i == ".data:") {
             data = true;
-        } else if (i == ".program:") {
+        } else if (*i == ".program:") {
             data = false;
         } else {
             token = new Token;
             if (data) {
                 token->type = token_type::VARIABLE;
-                token->m_variable = i;
+                token->m_variable = *i;
                 token->m_var_pos = ram_pos;
                 ram_pos++;
                 m_variables->push_back(token);
             } else {
-                if (isOpcode(i)) {
+                if (isOpcode(*i)) {
                     token->type = token_type::OPCODE;
-                    token->m_opcode = getOpcodeNumber(i);
+                    token->m_opcode = getOpcodeNumber(*i);
                     token->m_size = 1;
-                } else if (isAddress(i)) {
+                    if (token->m_opcode == 83 ||
+                        token->m_opcode == 84 ||
+                        token->m_opcode == 85) {
+                        i++;
+                        token->m_variable = *i;
+                        token->m_var_pos = getVariablePos(token->m_variable);
+                    }
+                } else if (isAddress(*i)) {
                     token->type = token_type::ADDRESS;
-                    std::string s = i.substr(1, i.length());
+                    std::string s = i->substr(1, i->length());
                     token->m_addressH = std::stoi(s.substr(0, 2),
                                                   nullptr, 16);
                     token->m_addressL = std::stoi(s.substr(2, s.length()),
                                                   nullptr, 16);
                     token->m_size = 2;
-                } else if (isNumber(i)) {
+                } else if (isNumber(*i)) {
                     token->type = token_type::NUMBER;
-                    token->m_number = std::stoi(i, nullptr, 16);
+                    token->m_number = std::stoi(*i, nullptr, 16);
                     token->m_size = 1;
-                } else if (isLabel(i)) {
+                } else if (isLabel(*i)) {
                     token->type = token_type::LABEL_TO;
-                    token->m_label = i.substr(0, i.length() - 1);
+                    token->m_label = i->substr(0, i->length() - 1);
                     token->m_size = 0;
                 } else {
                     token->type = token_type::LABEL_FROM;
-                    token->m_label = i;
+                    token->m_label = *i;
                     token->m_size = 0;
                 }
                 m_instructions->push_back(token);
@@ -186,14 +189,9 @@ std::list<Token *> *Lexer::getInstructions() {
     return m_instructions;
 }
 
-std::list<Token *> *Lexer::getVariables() {
-    return m_variables;
-}
-
 Rosetta_Stone::Rosetta_Stone(bool o) {
     O3 = o;
     m_instructions = nullptr;
-    m_variables = nullptr;
     m_file = new std::list<unsigned char>;
     m_out.open("out.hex", std::ios::binary | std::ios::out);
 }
@@ -205,10 +203,6 @@ Rosetta_Stone::~Rosetta_Stone() {
 
 void Rosetta_Stone::setInstructions(std::list<Token *> *l) {
     m_instructions = l;
-}
-
-void Rosetta_Stone::setVariables(std::list<Token *> *l) {
-    m_variables = l;
 }
 
 void Rosetta_Stone::findLabels() {
@@ -278,25 +272,36 @@ void Rosetta_Stone::optimized() {
              it++) {
         }
     } else {
+        std::string a, var_name;
+        bool var = false;
         for (auto i: *m_instructions) {
-            if (i->type == token_type::OPCODE &&
-               (i->m_opcode == 83 ||
-                i->m_opcode == 84 ||
-                i->m_opcode == 85)) {
-
-            } else if (i->type == token_type::OPCODE) {
-                m_file->push_back(i->m_opcode);
-            } else if (i->type == token_type::NUMBER) {
-                m_file->push_back(i->m_number);
-            } else if (i->type == token_type::ADDRESS) {
-                m_file->push_back(i->m_addressL);
-                m_file->push_back(i->m_addressH);
-            } else if (i->type == token_type::LABEL_FROM) {
-                std::string a = addPadding(toHex(labelPos(i->m_label)));
+            if (var) {
+                a = addPadding(toHex(i->m_var_pos));
                 m_file->push_back(std::stoi(a.substr(2, a.length()),
                                             nullptr, 16));
                 m_file->push_back(std::stoi(a.substr(0, 2),
                                             nullptr, 16));
+            } else {
+                if (i->type == token_type::OPCODE &&
+                    (i->m_opcode == 83 ||
+                     i->m_opcode == 84 ||
+                     i->m_opcode == 85)) {
+                    var = true;
+                    m_file->push_back(i->m_opcode);
+                } else if (i->type == token_type::OPCODE) {
+                    m_file->push_back(i->m_opcode);
+                } else if (i->type == token_type::NUMBER) {
+                    m_file->push_back(i->m_number);
+                } else if (i->type == token_type::ADDRESS) {
+                    m_file->push_back(i->m_addressL);
+                    m_file->push_back(i->m_addressH);
+                } else if (i->type == token_type::LABEL_FROM) {
+                    a = addPadding(toHex(labelPos(i->m_label)));
+                    m_file->push_back(std::stoi(a.substr(2, a.length()),
+                                                nullptr, 16));
+                    m_file->push_back(std::stoi(a.substr(0, 2),
+                                                nullptr, 16));
+                }
             }
         }
     }
