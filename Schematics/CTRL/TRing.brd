@@ -2164,6 +2164,11 @@ design rules under a new name.</description>
 <wire x1="56.515" y1="31.877" x2="56.515" y2="29.337" width="0.4" layer="16"/>
 <wire x1="56.515" y1="29.337" x2="53.975" y2="26.797" width="0.4" layer="16"/>
 <wire x1="53.975" y1="26.797" x2="52.705" y2="26.797" width="0.4" layer="16"/>
+<contactref element="V6" pad="13"/>
+<wire x1="3.175" y1="34.417" x2="3.683" y2="34.417" width="0.4" layer="16"/>
+<wire x1="3.683" y1="34.417" x2="5.08" y2="33.02" width="0.4" layer="16"/>
+<wire x1="15.748" y1="33.02" x2="17.145" y2="34.417" width="0.4" layer="16"/>
+<wire x1="5.08" y1="33.02" x2="15.748" y2="33.02" width="0.4" layer="16"/>
 </signal>
 <signal name="!T8">
 <contactref element="V5" pad="6"/>
