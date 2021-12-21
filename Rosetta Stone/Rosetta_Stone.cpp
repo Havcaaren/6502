@@ -193,12 +193,10 @@ Rosetta_Stone::Rosetta_Stone(bool o) {
     O3 = o;
     m_instructions = nullptr;
     m_file = new std::list<unsigned char>;
-    m_out.open("out.hex", std::ios::binary | std::ios::out);
 }
 
 Rosetta_Stone::~Rosetta_Stone() {
     delete m_instructions, m_file;
-    m_out.close();
 }
 
 void Rosetta_Stone::setInstructions(std::list<Token *> *l) {
@@ -222,7 +220,7 @@ int Rosetta_Stone::labelPos(const std::string &s) {
             return i.second;
         }
     }
-    std::string a = "Label " + s + " doenst exist.\n";
+    std::string a = "Label " + s + " doesn't exist.\n";
     throw std::invalid_argument(s);
 }
 
@@ -272,43 +270,40 @@ void Rosetta_Stone::optimized() {
              it++) {
         }
     } else {
-        std::string a, var_name;
-        bool var = false;
+        std::string a;
         for (auto i: *m_instructions) {
-            if (var) {
-                a = addPadding(toHex(i->m_var_pos));
-                m_file->push_back(std::stoi(a.substr(2, a.length()),
-                                            nullptr, 16));
-                m_file->push_back(std::stoi(a.substr(0, 2),
-                                            nullptr, 16));
-            } else {
-                if (i->type == token_type::OPCODE &&
-                    (i->m_opcode == 83 ||
-                     i->m_opcode == 84 ||
-                     i->m_opcode == 85)) {
-                    var = true;
-                    m_file->push_back(i->m_opcode);
-                } else if (i->type == token_type::OPCODE) {
-                    m_file->push_back(i->m_opcode);
-                } else if (i->type == token_type::NUMBER) {
-                    m_file->push_back(i->m_number);
-                } else if (i->type == token_type::ADDRESS) {
-                    m_file->push_back(i->m_addressL);
-                    m_file->push_back(i->m_addressH);
-                } else if (i->type == token_type::LABEL_FROM) {
-                    a = addPadding(toHex(labelPos(i->m_label)));
+            if (i->type == token_type::OPCODE) {
+                m_file->push_back(i->m_opcode);
+                if (i->m_opcode == 83 ||
+                    i->m_opcode == 84 ||
+                    i->m_opcode == 85) {
+                    a = addPadding(std::to_string(i->m_var_pos));
                     m_file->push_back(std::stoi(a.substr(2, a.length()),
                                                 nullptr, 16));
                     m_file->push_back(std::stoi(a.substr(0, 2),
                                                 nullptr, 16));
                 }
+            } else if (i->type == token_type::NUMBER) {
+                m_file->push_back(i->m_number);
+            } else if (i->type == token_type::ADDRESS) {
+                m_file->push_back(i->m_addressL);
+                m_file->push_back(i->m_addressH);
+            } else if (i->type == token_type::LABEL_FROM) {
+                a = addPadding(toHex(labelPos(i->m_label)));
+                m_file->push_back(std::stoi(a.substr(2, a.length()),
+                                            nullptr, 16));
+                m_file->push_back(std::stoi(a.substr(0, 2),
+                                            nullptr, 16));
             }
         }
     }
 }
 
 void Rosetta_Stone::compile() {
+    m_out.open("out.hex", std::ios::binary | std::ios::out);
     for (auto i: *m_file) {
         m_out << i;
+        std::cout<<std::hex<<i<<",";
     }
+    m_out.close();
 }
