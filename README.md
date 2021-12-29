@@ -37,14 +37,6 @@ Flags: ZF, OF, NF, LF, GF and EF.
 
 ### CONTROL  
 
-## Compiler  
-Rosetta Stone. Need to by compiled.  
-```
-g++ main.cpp Rosetta_Stone.cpp Rosetta_Stone.h -o RS
-
-./RS file_name.casm or RS.exe file_name.casm 
-```
-
 
 Autor: Matej Dinis.
 
