@@ -67,9 +67,9 @@ int main(int argc, char **argv) {
     // "..\\test.asm" argv[1]
     input_file->open(argv[1]);
 
-    auto[data_l, program_l] = split(normalized_and_split(input_file));
-    output_for_arduino(create_output(insert_addresses(remove_labels(program_l, give_label_pos(program_l, create_OP_map())),
-                                            give_data_pos(data_l), give_label_pos(program_l, create_OP_map())),
+    auto parts = split(normalized_and_split(input_file));
+    output_for_arduino(create_output(insert_addresses(remove_labels(parts.program, give_label_pos(parts.program, create_OP_map())),
+                                            give_data_pos(parts.data), give_label_pos(parts.program, create_OP_map())),
                        create_OP_map()));
 
     return 0;
