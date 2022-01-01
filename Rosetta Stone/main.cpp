@@ -296,30 +296,36 @@ std::string add_padding(std::string s) {
 
 std::list<std::string> *insert_addresses(std::list<std::string> *program,
                                          std::list<data *> *data_list,
-                                         std::list<label *> *labels) {
+                                         std::list<label *> *label_list) {
     auto ld = new std::list<std::string>;
-    labels = normalized_labels(labels);
-    for (auto i: *program) {
-        auto it_l = std::find(labels->begin(),
-                              labels->end(),
-                              [&](label *A) { return A->name == i; });
-        auto it_d = std::find(data_list->begin(),
-                              data_list->end(),
-                              [&](data *A) { return A->name == i; });
-        if (it_l != labels->end()) {
-            ld->push_back(add_padding(std::to_string((*it_l)->pos)));
-        } else if (it_d != data_list->end()) {
-            ld->push_back(add_padding(std::to_string((*it_d)->pos)));
-        } else {
+    label_list = normalized_labels(label_list);
+    bool A = false;
+    for (const auto& i: *program) {
+        for (auto l: *label_list) {
+            if (l->name == i) {
+                ld->push_back(add_padding(std::to_string(l->pos)));
+                A = true;
+                break;
+            }
+        }
+        for (auto d: *data_list) {
+            if (d->name == i) {
+                ld->push_back(add_padding(std::to_string(d->pos)));
+                A = true;
+                break;
+            }
+        }
+        if (!A) {
             ld->push_back(i);
         }
+        A = false;
     }
-    for (auto i: *labels) {
+    for (auto i: *label_list) {
         delete i;
     }
     for (auto i: *data_list) {
         delete i;
     }
-    delete program, labels, data_list;
+    delete program, label_list, data_list;
     return ld;
 }
