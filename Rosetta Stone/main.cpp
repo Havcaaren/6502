@@ -59,14 +59,14 @@ int main(int argc, char **argv) {
         std::cout << "No input file." << std::endl;
         return -1;
     }
-    bool opt = false;
-    if (argc == 3) {
-        opt = true;
-    }
+//    bool opt = false;
+//    if (argc == 3) {
+//        opt = true;
+//    }
 
     auto input_file = new std::ifstream;
     // "..\\test.asm" argv[1]
-    input_file->open("..\\test.asm");
+    input_file->open(argv[1]);
 
     auto[data_l, program_l] = split(normalized_and_split(input_file));
     output_for_arduino(create_output(insert_addresses(remove_labels(program_l, give_label_pos(program_l, create_OP_map())),
