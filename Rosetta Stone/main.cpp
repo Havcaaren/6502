@@ -47,60 +47,32 @@ std::string add_padding(std::string s);
 
 std::list<std::string> *insert_addresses(std::list<std::string> *program,
                                          std::list<data *> *data_list,
-                                         std::list<label *> *labels);
+                                         std::list<label *> *label_list);
+
+std::list<std::string> *create_output(std::list<std::string> *program,
+                                      std::map<std::string, op_code> *OPs);
+
+void output_for_arduino(std::list<std::string> *program);
 
 int main(int argc, char **argv) {
     if (argc == 1) {
         std::cout << "No input file." << std::endl;
         return -1;
     }
-
     bool opt = false;
-//    if (argc == 2) {
-//        opt = true;
-//    }
+    if (argc == 3) {
+        opt = true;
+    }
 
     auto input_file = new std::ifstream;
-    std::list<std::string> *nz_file = nullptr;
-
     // "..\\test.asm" argv[1]
     input_file->open("..\\test.asm");
 
-    auto[data, program] = split(normalized_and_split(input_file));
+    auto[data_l, program_l] = split(normalized_and_split(input_file));
+    output_for_arduino(create_output(insert_addresses(remove_labels(program_l, give_label_pos(program_l, create_OP_map())),
+                                            give_data_pos(data_l), give_label_pos(program_l, create_OP_map())),
+                       create_OP_map()));
 
-
-
-//    nz_file = normalized_and_split(input_file);
-//    auto [data, program] = split(nz_file);
-
-//    for (const auto &i: *nz_file) {
-//        std::cout << i << "\n";
-//    }
-    std::cout << "---------\n";
-    for (const auto &i: *data) {
-        std::cout << i << "\n";
-    }
-    std::cout << "---------\n";
-    for (const auto &i: *program) {
-        std::cout << i << "\n";
-    }
-    std::cout << "---------\n";
-
-    auto A = give_data_pos(data);
-    auto B = give_label_pos(program, create_OP_map());
-    std::cout << "---------\n";
-    for (auto i: *A) {
-        std::cout << i->name << " " << i->pos << "\n";
-    }
-    std::cout << "---------\n";
-    for (auto i: *B) {
-        std::cout << i->name << " " << i->pos << "\n";
-    }
-    std::cout << "---------\n";
-    auto C = remove_labels(program, B);
-    for (const auto &i: *C) {
-        std::cout << i << "\n";
-    }
     return 0;
 }
 
@@ -259,7 +231,6 @@ std::list<label *> *give_label_pos(std::list<std::string> *program,
             index += it_op->second.size;
         }
     }
-    delete labels, OPs;
     return list;
 }
 
@@ -274,7 +245,6 @@ std::list<std::string> *remove_labels(std::list<std::string> *program,
             new_ld->push_back(i);
         }
     }
-    delete program;
     return new_ld;
 }
 
@@ -326,6 +296,37 @@ std::list<std::string> *insert_addresses(std::list<std::string> *program,
     for (auto i: *data_list) {
         delete i;
     }
-    delete program, label_list, data_list;
     return ld;
+}
+
+std::list<std::string> *create_output(std::list<std::string> *program,
+                                      std::map<std::string, op_code> *OPs) {
+    auto ld = new std::list<std::string>;
+    for (const auto& i: *program) {
+        if (OPs->find(i) != OPs->end()) {
+            ld->push_back(std::to_string(OPs->find(i)->second.num));
+        } else {
+            ld->push_back(i);
+        }
+    }
+    return ld;
+}
+
+void output_for_arduino(std::list<std::string> *program) {
+    std::string out;
+    out.append("int program[] = {");
+    for (const auto& i: *program) {
+        if (i.length() < 4) {
+            out.append(i);
+            out.append(", ");
+        } else {
+            out.append(i.substr(2, 2));
+            out.append(", ");
+            out.append(i.substr(0, 2));
+            out.append(", ");
+        }
+    }
+    out.erase(out.length()-2, 2);
+    out.append("};");
+    std::cout<<out<<std::endl;
 }
