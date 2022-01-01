@@ -1,45 +1,90 @@
-#ifndef COMPILER_PARSE_H
-#define COMPILER_PARSE_H
+//TODO: -O3 ????
+//TODO: Control if Label exist
+//TODO: Compile
+//TODO: Optimized (ADV 20 \n ADV 20) -> ADV 40
 
-#include <fstream>
+/*
+ * Custom parser and compiler for custom 8bit CPU.
+ */
+
+#pragma once
+
 #include <list>
-#include <string>
+#include <fstream>
 #include <iostream>
-#include <sstream>
+#include <algorithm>
+#include <map>
 
-struct OP {
-    unsigned char op = 0;
-    unsigned char val = 0;
-    int address = 0;
-    bool need_address = false;
-    bool need_val = false;
+enum class token_type {
+    OPCODE, ADDRESS, LABEL_TO, LABEL_FROM, NUMBER, VARIABLE
+};
 
-    explicit OP(unsigned char op);
-    OP(unsigned char op, bool v, unsigned char val);
-    OP(unsigned char op, int add, bool a);
+struct Token {
+    token_type type;
+    unsigned char m_opcode;
+    unsigned char m_addressL;
+    unsigned char m_addressH;
+    std::string m_label;
+    std::string m_variable;
+    int m_var_pos;
+    unsigned char m_number;
+    int m_size;
+};
+
+class Lexer {
+private:
+    std::ifstream m_in;
+    std::map<std::string, int> m_OP_codes;
+    std::list<std::string> m_file;
+    std::list<Token *> *m_instructions;
+    std::list<Token*>* m_variables;
+public:
+    explicit Lexer(const std::string &);
+
+    ~Lexer();
+
+    void split();
+
+    bool isOpcode(const std::string &);
+
+    int getOpcodeNumber(const std::string &);
+
+    static bool isAddress(const std::string &);
+
+    static bool isNumber(const std::string &);
+
+    static bool isLabel(const std::string &);
+
+    int getVariablePos(const std::string &);
+
+    void tokenized();
+
+    std::list<Token *> *getInstructions();
 };
 
 class Rosetta_Stone {
 private:
-    int org;
-    std::list<std::pair<std::string, int>>* labels;
-    std::ifstream in;
-    std::list<OP*>* op_list;
-    std::ofstream out;
-private:
-    void find_org();
-    void find_labels();
-    static unsigned char reg(const std::string&);
-    int search_label(const std::string&);
-    bool is_label(std::string);
-    static bool is_reg(const std::string&);
-    void multiple_labels_control();
+    bool O3;
+    std::list<Token *> *m_instructions;
+    std::list<std::pair<Token *, int>> m_labels;
+    std::list<unsigned char> *m_file;
+    std::ofstream m_out;
 public:
-    explicit Rosetta_Stone(const std::string&);
-    ~Rosetta_Stone();
-    void parse();
-    void print() const;
-    void create_hex();
-};
+    explicit Rosetta_Stone(bool);
 
-#endif //COMPILER_PARSE_H
+    ~Rosetta_Stone();
+
+    void setInstructions(std::list<Token *> *);
+
+    void findLabels();
+
+    int labelPos(const std::string &);
+
+    static std::string addPadding(std::string);
+
+    static std::string toHex(int);
+
+    void optimized();
+
+    void compile();
+};
