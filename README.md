@@ -37,6 +37,11 @@ Flags: ZF, OF, NF, LF, GF and EF.
 
 ### CONTROL  
 
+### COMPILER
+```
+g++ Rosetta_Stone.cpp -o RS
+RS test.asm
+```
 
 Autor: Matej Dinis.
 
