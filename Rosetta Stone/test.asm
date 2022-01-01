@@ -26,8 +26,8 @@ L2: CALL L1
     HLT
 
 L1:
-    LXR line_count
-    SUR TEMP
+    LDXI line_count
+    SUI TEMP
     SUV 20
     ADX
     RET
