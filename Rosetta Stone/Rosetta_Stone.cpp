@@ -68,8 +68,12 @@ int main(int argc, char **argv) {
     input_file->open(argv[1]);
 
     auto parts = split(normalized_and_split(input_file));
-    output_for_arduino(create_output(insert_addresses(remove_labels(parts.program, give_label_pos(parts.program, create_OP_map())),
-                                            give_data_pos(parts.data), give_label_pos(parts.program, create_OP_map())),
+    output_for_arduino(create_output(insert_addresses(remove_labels(parts.program,
+                                                                    give_label_pos(parts.program,
+                                                                                   create_OP_map())),
+                                                       give_data_pos(parts.data),
+                                                       give_label_pos(parts.program,
+                                                       create_OP_map())),
                        create_OP_map()));
 
     return 0;
