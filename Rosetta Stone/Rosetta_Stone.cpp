@@ -317,7 +317,7 @@ std::list<std::string> *create_output(std::list<std::string> *program,
 
 void output_for_arduino(std::list<std::string> *program) {
     std::string out;
-    out.append("int program[] = {");
+    out.append("unsigned char program[] = {");
     for (const auto& i: *program) {
         if (i.length() < 4) {
             out.append(i);
@@ -333,3 +333,5 @@ void output_for_arduino(std::list<std::string> *program) {
     out.append("};");
     std::cout<<out<<std::endl;
 }
+
+//TODO: Negative numbers?
