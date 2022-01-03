@@ -17,7 +17,7 @@ L2: CALL L1
     MYA
     MAX
     MAY
-    ADV 127
+    ADV DA
     ANX
     ORV 20
     NOA
