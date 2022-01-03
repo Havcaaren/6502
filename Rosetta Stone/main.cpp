@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <list>
 #include <fstream>
 #include <algorithm>
@@ -31,6 +30,8 @@ std::list<std::string> *normalized_and_split(std::ifstream *file);
 
 section split(std::list<std::string> *file);
 
+bool register_check(std::list<std::string> *program);
+
 std::list<std::string> *find_labels(std::list<std::string> *program);
 
 std::list<data *> *give_data_pos(std::list<std::string> *dataL);
@@ -59,86 +60,101 @@ int main(int argc, char **argv) {
         std::cout << "No input file." << std::endl;
         return -1;
     }
-//    bool opt = false;
-//    if (argc == 3) {
-//        opt = true;
-//    }
+    std::string LF = "-L";
+    bool logic = false;
+    for (int i = 0; i < argc; ++i) {
+        if (argv[i] == LF) {
+            logic = true;
+        }
+    }
 
     auto input_file = new std::ifstream;
     // "..\\test.asm" argv[1]
-    input_file->open(argv[1]);
+    input_file->open("..\\test.asm");
 
-    auto[data_l, program_l] = split(normalized_and_split(input_file));
-    output_for_arduino(create_output(insert_addresses(remove_labels(program_l, give_label_pos(program_l, create_OP_map())),
-                                            give_data_pos(data_l), give_label_pos(program_l, create_OP_map())),
-                       create_OP_map()));
+    auto parts = split(normalized_and_split(input_file));
+    if (1) {
+        if (register_check(parts.program)) {
+            return -1;
+        }
+    }
+    output_for_arduino(
+            create_output(
+                    insert_addresses(
+                            remove_labels(parts.program,
+                                          give_label_pos(parts.program,
+                                                         create_OP_map())),
+                            give_data_pos(parts.data),
+                            give_label_pos(parts.program,
+                                           create_OP_map())),
+                    create_OP_map()));
 
     return 0;
 }
 
 std::map<std::string, op_code> *create_OP_map() {
     auto *map = new std::map<std::string, op_code>;
-    map->insert({"NOP",  {0x80, 1}});
-    map->insert({"CLX",  {0x81, 1}});
-    map->insert({"CLY",  {0x82, 1}});
-    map->insert({"CLA",  {0x83, 1}});
-    map->insert({"OUX",  {0x84, 1}});
-    map->insert({"OUY",  {0x85, 1}});
-    map->insert({"OUA",  {0x86, 1}});
-    map->insert({"CMX",  {0x88, 1}});
-    map->insert({"CMY",  {0x89, 1}});
-    map->insert({"CMA",  {0x8A, 1}}); // why??? constant EQ flag
-    map->insert({"CMV",  {0x8B, 2}});
+    map->insert({"NOP", {0x80, 1}});
+    map->insert({"CLX", {0x81, 1}});
+    map->insert({"CLY", {0x82, 1}});
+    map->insert({"CLA", {0x83, 1}});
+    map->insert({"OUX", {0x84, 1}});
+    map->insert({"OUY", {0x85, 1}});
+    map->insert({"OUA", {0x86, 1}});
+    map->insert({"CMX", {0x88, 1}});
+    map->insert({"CMY", {0x89, 1}});
+    map->insert({"CMA", {0x8A, 1}}); // why??? constant EQ flag
+    map->insert({"CMV", {0x8B, 2}});
     map->insert({"CALL", {0x8C, 3}});
-    map->insert({"STX",  {0x8D, 3}});
-    map->insert({"STY",  {0x8E, 3}});
-    map->insert({"STA",  {0x8F, 3}});
-    map->insert({"JZ",   {0x90, 3}});
-    map->insert({"JNZ",  {0x91, 3}});
-    map->insert({"JN",   {0x92, 3}});
-    map->insert({"JL",   {0x93, 3}});
-    map->insert({"JG",   {0x94, 3}});
-    map->insert({"JE",   {0x95, 3}});
-    map->insert({"RET",  {0x96, 1}});
-    map->insert({"HLT",  {0x97, 1}});
-    map->insert({"ADX",  {0x98, 1}});
-    map->insert({"ADY",  {0x99, 1}});
-    map->insert({"ADA",  {0x9A, 1}});
-    map->insert({"ADI",  {0x9B, 3}});
-    map->insert({"ADV",  {0x9C, 2}});
-    map->insert({"SUX",  {0xA0, 1}});
-    map->insert({"SUY",  {0xA1, 1}});
-    map->insert({"SUA",  {0xA2, 1}}); // same as CLA
-    map->insert({"SUI",  {0xA3, 3}});
-    map->insert({"SUV",  {0xA4, 2}});
-    map->insert({"LDX",  {0xA8, 2}});
-    map->insert({"LDY",  {0xA9, 2}});
-    map->insert({"LDA",  {0xAA, 2}});
+    map->insert({"STX", {0x8D, 3}});
+    map->insert({"STY", {0x8E, 3}});
+    map->insert({"STA", {0x8F, 3}});
+    map->insert({"JZ", {0x90, 3}});
+    map->insert({"JNZ", {0x91, 3}});
+    map->insert({"JN", {0x92, 3}});
+    map->insert({"JL", {0x93, 3}});
+    map->insert({"JG", {0x94, 3}});
+    map->insert({"JE", {0x95, 3}});
+    map->insert({"RET", {0x96, 1}});
+    map->insert({"HLT", {0x97, 1}});
+    map->insert({"ADX", {0x98, 1}});
+    map->insert({"ADY", {0x99, 1}});
+    map->insert({"ADA", {0x9A, 1}});
+    map->insert({"ADI", {0x9B, 3}});
+    map->insert({"ADV", {0x9C, 2}});
+    map->insert({"SUX", {0xA0, 1}});
+    map->insert({"SUY", {0xA1, 1}});
+    map->insert({"SUA", {0xA2, 1}}); // same as CLA
+    map->insert({"SUI", {0xA3, 3}});
+    map->insert({"SUV", {0xA4, 2}});
+    map->insert({"LDX", {0xA8, 2}});
+    map->insert({"LDY", {0xA9, 2}});
+    map->insert({"LDA", {0xAA, 2}});
     map->insert({"LDXI", {0xAB, 3}});
     map->insert({"LDYI", {0xAC, 3}});
     map->insert({"LDAI", {0xAD, 3}});
-    map->insert({"MXY",  {0xB0, 1}});
-    map->insert({"MXA",  {0xB1, 1}});
-    map->insert({"MYX",  {0xB2, 1}});
-    map->insert({"MYA",  {0xB3, 1}});
-    map->insert({"MAX",  {0xB4, 1}});
-    map->insert({"MAY",  {0xB5, 1}});
-    map->insert({"ANX",  {0xB8, 1}});
-    map->insert({"ANY",  {0xB9, 1}});
-    map->insert({"ANA",  {0xBA, 1}}); // why????
-    map->insert({"ANV",  {0xBB, 2}});
-    map->insert({"ORX",  {0xBC, 1}});
-    map->insert({"ORY",  {0xBD, 1}});
-    map->insert({"ORA",  {0xBE, 1}}); // why????
-    map->insert({"ORV",  {0xBF, 2}});
-    map->insert({"XOX",  {0x40, 1}});
-    map->insert({"XOY",  {0x41, 1}});
-    map->insert({"XOA",  {0x42, 1}}); // why????
-    map->insert({"XOV",  {0x43, 2}});
-    map->insert({"NOX",  {0x44, 1}});
-    map->insert({"NOY",  {0x45, 1}});
-    map->insert({"NOA",  {0x46, 1}});
-    map->insert({"NOV",  {0x47, 2}}); // why????
+    map->insert({"MXY", {0xB0, 1}});
+    map->insert({"MXA", {0xB1, 1}});
+    map->insert({"MYX", {0xB2, 1}});
+    map->insert({"MYA", {0xB3, 1}});
+    map->insert({"MAX", {0xB4, 1}});
+    map->insert({"MAY", {0xB5, 1}});
+    map->insert({"ANX", {0xB8, 1}});
+    map->insert({"ANY", {0xB9, 1}});
+    map->insert({"ANA", {0xBA, 1}}); // why????
+    map->insert({"ANV", {0xBB, 2}});
+    map->insert({"ORX", {0xBC, 1}});
+    map->insert({"ORY", {0xBD, 1}});
+    map->insert({"ORA", {0xBE, 1}}); // why????
+    map->insert({"ORV", {0xBF, 2}});
+    map->insert({"XOX", {0x40, 1}});
+    map->insert({"XOY", {0x41, 1}});
+    map->insert({"XOA", {0x42, 1}}); // why????
+    map->insert({"XOV", {0x43, 2}});
+    map->insert({"NOX", {0x44, 1}});
+    map->insert({"NOY", {0x45, 1}});
+    map->insert({"NOA", {0x46, 1}});
+    map->insert({"NOV", {0x47, 2}}); // why????
     return map;
 }
 
@@ -146,7 +162,7 @@ std::list<std::string> *normalized_and_split(std::ifstream *file) {
     auto ld = new std::list<std::string>;
     std::string buffer((std::istreambuf_iterator<char>(*file)),
                        (std::istreambuf_iterator<char>()));
-
+    file->close();
     for (int i = 0; i < buffer.length(); ++i) {
         if (buffer[i] == '\n') {
             buffer[i] = ' ';
@@ -187,6 +203,92 @@ section split(std::list<std::string> *file) {
                        file->end());
     delete file;
     return st;
+}
+
+bool register_check(std::list<std::string> *program) {
+    bool X = false, A = false, Y = false;
+    std::string lab;
+    std::list<std::string>::iterator prev;
+    for (auto i = program->begin();
+         i != program->end();
+         i++) {
+        if (*i == "CALL") {
+            i++;
+            prev = i;
+            lab = *i;
+            lab.append(":");
+            i++;
+            while (*i != lab) {
+                i++;
+            }
+            lab.clear();
+        }
+        if (*i == "RET" || (!lab.empty() && (*i).find(":") != std::string::npos)) {
+            i = prev;
+        }
+        if (X && Y && A) {
+            return true;
+        } else if (*i == "CLA" ||
+                   (*i == "MAX" && X) ||
+                   (*i == "MAY" && Y) ||
+                   (*i == "NOX" && X) ||
+                   (*i == "NOY" && Y) ||
+                   *i == "NOV" ||
+                   *i == "XOA" ||
+                   *i == "LDA") {
+            A = true;
+        } else if (*i == "CLX" ||
+                   (*i == "MXY" && Y) ||
+                   (*i == "MXA" && A) ||
+                   *i == "LDX") {
+            X = true;
+        } else if (*i == "CLY" ||
+                   (*i == "MYX" && X) ||
+                   (*i == "MYA" && A) ||
+                   *i == "LDY") {
+            Y = true;
+        } else if ((*i == "ADX" ||
+                    *i == "SUX" ||
+                    *i == "ANX" ||
+                    *i == "ORX" ||
+                    *i == "NOX" ||
+                    *i == "XOX" ||
+                    *i == "MYX" ||
+                    *i == "MAX" ||
+                    *i == "STX") && !X) {
+            std::cout << "OP: "
+                      << *i
+                      << ". X register used but not set. Value in X unknown.\n";
+            return false;
+        } else if ((*i == "ADY" ||
+                    *i == "SUY" ||
+                    *i == "ANY" ||
+                    *i == "ORY" ||
+                    *i == "NOY" ||
+                    *i == "XOY" ||
+                    *i == "MXY" ||
+                    *i == "MAY" ||
+                    *i == "STY") && !Y) {
+            std::cout << "OP: "
+                      << *i
+                      << ". Y register used but not set. Value in Y unknown.\n";
+            return false;
+        } else if ((*i == "ADA" ||
+                    *i == "SUA" ||
+                    *i == "ANA" ||
+                    *i == "ORA" ||
+                    *i == "NOA" ||
+                    *i == "XOA" ||
+                    *i == "MXA" ||
+                    *i == "MYA" ||
+                    *i == "STA") && !A) {
+            std::cout << "OP: "
+                      << *i
+                      << ". X register used but not set. Value in X unknown.\n";
+            return false;
+        }
+    }
+    return false;
 }
 
 std::list<std::string> *find_labels(std::list<std::string> *program) {
@@ -270,7 +372,7 @@ std::list<std::string> *insert_addresses(std::list<std::string> *program,
     auto ld = new std::list<std::string>;
     label_list = normalized_labels(label_list);
     bool A = false;
-    for (const auto& i: *program) {
+    for (const auto &i: *program) {
         for (auto l: *label_list) {
             if (l->name == i) {
                 ld->push_back(add_padding(std::to_string(l->pos)));
@@ -302,7 +404,7 @@ std::list<std::string> *insert_addresses(std::list<std::string> *program,
 std::list<std::string> *create_output(std::list<std::string> *program,
                                       std::map<std::string, op_code> *OPs) {
     auto ld = new std::list<std::string>;
-    for (const auto& i: *program) {
+    for (const auto &i: *program) {
         if (OPs->find(i) != OPs->end()) {
             ld->push_back(std::to_string(OPs->find(i)->second.num));
         } else {
@@ -314,8 +416,8 @@ std::list<std::string> *create_output(std::list<std::string> *program,
 
 void output_for_arduino(std::list<std::string> *program) {
     std::string out;
-    out.append("int program[] = {");
-    for (const auto& i: *program) {
+    out.append("unsigned char program[] = {");
+    for (const auto &i: *program) {
         if (i.length() < 4) {
             out.append(i);
             out.append(", ");
@@ -326,7 +428,7 @@ void output_for_arduino(std::list<std::string> *program) {
             out.append(", ");
         }
     }
-    out.erase(out.length()-2, 2);
+    out.erase(out.length() - 2, 2);
     out.append("};");
-    std::cout<<out<<std::endl;
+    std::cout << out << std::endl;
 }
