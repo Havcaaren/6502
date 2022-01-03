@@ -46,6 +46,8 @@ std::list<label *> *normalized_labels(std::list<label *> *label_list);
 
 std::string add_padding(std::string s);
 
+std::string to_num(std::string hex);
+
 std::list<std::string> *insert_addresses(std::list<std::string> *program,
                                          std::list<data *> *data_list,
                                          std::list<label *> *label_list);
@@ -73,11 +75,11 @@ int main(int argc, char **argv) {
     input_file->open("..\\test.asm");
 
     auto parts = split(normalized_and_split(input_file));
-    if (1) {
-        if (register_check(parts.program)) {
-            return -1;
-        }
-    }
+//    if (1) {
+//        if (register_check(parts.program)) {
+//            return -1;
+//        }
+//    }
     output_for_arduino(
             create_output(
                     insert_addresses(
@@ -366,6 +368,11 @@ std::string add_padding(std::string s) {
     return s;
 }
 
+std::string to_num(std::string hex) {
+    int num = std::stoi(hex, nullptr, 16);
+    return std::to_string(num);
+}
+
 std::list<std::string> *insert_addresses(std::list<std::string> *program,
                                          std::list<data *> *data_list,
                                          std::list<label *> *label_list) {
@@ -408,7 +415,22 @@ std::list<std::string> *create_output(std::list<std::string> *program,
         if (OPs->find(i) != OPs->end()) {
             ld->push_back(std::to_string(OPs->find(i)->second.num));
         } else {
-            ld->push_back(i);
+            if (i.length() == 4) {
+                ld->push_back(
+                        std::to_string(
+                                std::stoi(
+                                        i.substr(2,2),
+                                        nullptr,
+                                        10)));
+                ld->push_back(
+                        std::to_string(
+                                std::stoi(
+                                        i.substr(0,2),
+                                        nullptr,
+                                        10)));
+            } else {
+                ld->push_back(to_num(i));
+            }
         }
     }
     return ld;
@@ -418,15 +440,8 @@ void output_for_arduino(std::list<std::string> *program) {
     std::string out;
     out.append("unsigned char program[] = {");
     for (const auto &i: *program) {
-        if (i.length() < 4) {
-            out.append(i);
-            out.append(", ");
-        } else {
-            out.append(i.substr(2, 2));
-            out.append(", ");
-            out.append(i.substr(0, 2));
-            out.append(", ");
-        }
+        out.append(i);
+        out.append(", ");
     }
     out.erase(out.length() - 2, 2);
     out.append("};");
