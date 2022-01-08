@@ -46,7 +46,7 @@ std::list<label *> *normalized_labels(std::list<label *> *label_list);
 
 std::string add_padding(std::string s);
 
-std::string to_num(std::string hex);
+std::string to_num(const std::string& hex);
 
 std::list<std::string> *insert_addresses(std::list<std::string> *program,
                                          std::list<data *> *data_list,
@@ -72,24 +72,20 @@ int main(int argc, char **argv) {
 
     auto input_file = new std::ifstream;
     // "..\\test.asm" argv[1]
-    input_file->open("..\\test.asm");
+    input_file->open(argv[1]);
 
     auto parts = split(normalized_and_split(input_file));
-//    if (1) {
-//        if (register_check(parts.program)) {
-//            return -1;
-//        }
-//    }
+    auto OPs = create_OP_map();
     output_for_arduino(
             create_output(
                     insert_addresses(
                             remove_labels(parts.program,
                                           give_label_pos(parts.program,
-                                                         create_OP_map())),
+                                                         OPs)),
                             give_data_pos(parts.data),
                             give_label_pos(parts.program,
-                                           create_OP_map())),
-                    create_OP_map()));
+                                           OPs)),
+                    OPs));
 
     return 0;
 }
@@ -207,92 +203,6 @@ section split(std::list<std::string> *file) {
     return st;
 }
 
-bool register_check(std::list<std::string> *program) {
-    bool X = false, A = false, Y = false;
-    std::string lab;
-    std::list<std::string>::iterator prev;
-    for (auto i = program->begin();
-         i != program->end();
-         i++) {
-        if (*i == "CALL") {
-            i++;
-            prev = i;
-            lab = *i;
-            lab.append(":");
-            i++;
-            while (*i != lab) {
-                i++;
-            }
-            lab.clear();
-        }
-        if (*i == "RET" || (!lab.empty() && (*i).find(":") != std::string::npos)) {
-            i = prev;
-        }
-        if (X && Y && A) {
-            return true;
-        } else if (*i == "CLA" ||
-                   (*i == "MAX" && X) ||
-                   (*i == "MAY" && Y) ||
-                   (*i == "NOX" && X) ||
-                   (*i == "NOY" && Y) ||
-                   *i == "NOV" ||
-                   *i == "XOA" ||
-                   *i == "LDA") {
-            A = true;
-        } else if (*i == "CLX" ||
-                   (*i == "MXY" && Y) ||
-                   (*i == "MXA" && A) ||
-                   *i == "LDX") {
-            X = true;
-        } else if (*i == "CLY" ||
-                   (*i == "MYX" && X) ||
-                   (*i == "MYA" && A) ||
-                   *i == "LDY") {
-            Y = true;
-        } else if ((*i == "ADX" ||
-                    *i == "SUX" ||
-                    *i == "ANX" ||
-                    *i == "ORX" ||
-                    *i == "NOX" ||
-                    *i == "XOX" ||
-                    *i == "MYX" ||
-                    *i == "MAX" ||
-                    *i == "STX") && !X) {
-            std::cout << "OP: "
-                      << *i
-                      << ". X register used but not set. Value in X unknown.\n";
-            return false;
-        } else if ((*i == "ADY" ||
-                    *i == "SUY" ||
-                    *i == "ANY" ||
-                    *i == "ORY" ||
-                    *i == "NOY" ||
-                    *i == "XOY" ||
-                    *i == "MXY" ||
-                    *i == "MAY" ||
-                    *i == "STY") && !Y) {
-            std::cout << "OP: "
-                      << *i
-                      << ". Y register used but not set. Value in Y unknown.\n";
-            return false;
-        } else if ((*i == "ADA" ||
-                    *i == "SUA" ||
-                    *i == "ANA" ||
-                    *i == "ORA" ||
-                    *i == "NOA" ||
-                    *i == "XOA" ||
-                    *i == "MXA" ||
-                    *i == "MYA" ||
-                    *i == "STA") && !A) {
-            std::cout << "OP: "
-                      << *i
-                      << ". X register used but not set. Value in X unknown.\n";
-            return false;
-        }
-    }
-    return false;
-}
-
 std::list<std::string> *find_labels(std::list<std::string> *program) {
     auto *list = new std::list<std::string>;
     for (const auto &i: *program) {
@@ -320,7 +230,7 @@ std::list<label *> *give_label_pos(std::list<std::string> *program,
                                    std::map<std::string, op_code> *OPs) {
     auto *list = new std::list<label *>;
     auto *labels = find_labels(program);
-    int index = 0;
+    int index = 1;
     for (const auto &i: *program) {
         auto it_label = std::find_if(labels->begin(),
                                      labels->end(),
@@ -368,7 +278,7 @@ std::string add_padding(std::string s) {
     return s;
 }
 
-std::string to_num(std::string hex) {
+std::string to_num(const std::string& hex) {
     int num = std::stoi(hex, nullptr, 16);
     return std::to_string(num);
 }
