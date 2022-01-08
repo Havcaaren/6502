@@ -12,7 +12,7 @@ L2: CALL L1
     STX A1
     MXY
     MXA
-    STA TEMP
+    STA line_count
     MYX
     MYA
     MAX
