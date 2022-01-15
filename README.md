@@ -43,7 +43,7 @@ g++ Rosetta_Stone.cpp -o RS
 RS test.asm
 ```
 
-Autor: Matej (Havcaaren).
+Autor: Matej Dinis.
 
 
 [counter]: https://www.tme.eu/en/details/74ls193/counters-dividers/texas-instruments/sn74ls193n/
