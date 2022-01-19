@@ -62,13 +62,6 @@ int main(int argc, char **argv) {
         std::cout << "No input file." << std::endl;
         return -1;
     }
-    std::string LF = "-L";
-    bool logic = false;
-    for (int i = 0; i < argc; ++i) {
-        if (argv[i] == LF) {
-            logic = true;
-        }
-    }
 
     auto input_file = new std::ifstream;
     // "..\\test.asm" argv[1]
