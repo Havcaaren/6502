@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <fstream>
 #include <list>
+#include <algorithm>
+
 
 /*
  * CLR
@@ -38,10 +40,19 @@
  * NOX
  * NOY
  * NOA
- * CALL
+ * CMX
+ * CMY
+ * CMV
+ * JZ
+ * JN
+ * JO
+ * JL
+ * JG
+ * JE
+ * JMP
  */
 
-int to_int(std::string num) {
+int number_to_int(std::string num) {
     if (num.size() < 4) {
         throw std::invalid_argument("Not a hex number");
     }
@@ -237,8 +248,74 @@ std::list<std::string> *split(std::string buffer) {
     return ld;
 }
 
+std::pair<std::list<std::pair<std::string, int>> *,
+        std::list<std::string> *> *parse_labels(std::list<std::string> *buffer) {
+    auto *ld = new std::pair<std::list<std::pair<std::string, int>> *, std::list<std::string> *>;
+    auto *program = new std::list<std::string>;
+    auto *labels = new std::list<std::pair<std::string, int>>;
+    int pos = 0;
+    std::string tmp;
+    for (auto it = buffer->begin(); it != buffer->end(); it++) {
+        if (it->find(':') != std::string::npos) {
+            tmp = *it;
+            tmp.pop_back();
+            labels->push_back({tmp, pos + 1});
+        } else {
+            if (*it == "NOP" || *it == "CLR" || *it == "OUT" || *it == "MOV") {
+                pos++;
+            } else if (*it == "LDR") {
+                program->push_back(*it);
+                it++;
+                program->push_back(*it);
+                it++;
+                pos += 2;
+            } else if (*it == "ADD" || *it == "SUB" || *it == "AND" ||
+                       *it == "OR" || *it == "XOR" || *it == "NOT" || *it == "CMP") {
+                program->push_back(*it);
+                it++;
+                if (it->find('0') != std::string::npos) {
+                    pos += 2;
+                } else {
+                    pos++;
+                }
+            } else if (it->find('J') != std::string::npos) {
+                program->push_back(*it);
+                it++;
+                pos += 2;
+            }
+            program->push_back(*it);
+        }
+    }
+
+    ld->first = labels;
+    ld->second = program;
+    return ld;
+}
+
+std::list<std::string> *replace_labels(std::pair<std::list<std::pair<std::string, int>> *,
+        std::list<std::string> *> *buffer) {
+    std::string tmp;
+    for (auto &i: *buffer->second) {
+        for (const auto &j: *buffer->first) {
+            if (i == j.first) {
+                tmp.clear();
+                tmp.append(std::to_string(j.second));
+                std::reverse(tmp.begin(), tmp.end());
+                while (tmp.size() < 4) {
+                    tmp.append("0");
+                }
+                tmp.append("A");
+                std::reverse(tmp.begin(), tmp.end());
+                i = tmp;
+            }
+        }
+    }
+    return buffer->second;
+}
+
 std::list<int> *parse(std::list<std::string> *buffer) {
     auto *ld = new std::list<int>;
+    std::string tmp;
     for (auto it = buffer->begin(); it != buffer->end(); it++) {
         if (*it == "CLR") {
             ld->push_back(0);
@@ -267,7 +344,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 throw std::invalid_argument("Expected register, but got " + *it);
             }
             it++;
-            ld->push_back(to_int(*it));
+            ld->push_back(number_to_int(*it));
         } else if (*it == "ADD") {
             it++;
             if (*it == "X") {
@@ -278,7 +355,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 ld->push_back(10);
             } else {
                 ld->push_back(11);
-                ld->push_back(to_int(*it));
+                ld->push_back(number_to_int(*it));
             }
         } else if (*it == "SUB") {
             it++;
@@ -290,7 +367,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 ld->push_back(14);
             } else {
                 ld->push_back(15);
-                ld->push_back((char) to_int(*it));
+                ld->push_back(number_to_int(*it));
             }
         } else if (*it == "MOV") {
             it++;
@@ -336,7 +413,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 ld->push_back(22);
             } else {
                 ld->push_back(23);
-                ld->push_back(to_int(*it));
+                ld->push_back(number_to_int(*it));
             }
         } else if (*it == "OR") {
             it++;
@@ -346,7 +423,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 ld->push_back(25);
             } else {
                 ld->push_back(26);
-                ld->push_back(to_int(*it));
+                ld->push_back(number_to_int(*it));
             }
         } else if (*it == "XOR") {
             it++;
@@ -356,7 +433,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 ld->push_back(28);
             } else {
                 ld->push_back(29);
-                ld->push_back((char) to_int(*it));
+                ld->push_back(number_to_int(*it));
             }
         } else if (*it == "NOT") {
             it++;
@@ -369,8 +446,66 @@ std::list<int> *parse(std::list<std::string> *buffer) {
             } else {
                 throw std::invalid_argument("Expected register, but got " + *it);
             }
-        } else if (*it == "CALL") {
+        } else if (*it == "CMP") {
+            it++;
+            if (*it == "X") {
+                ld->push_back(33);
+            } else if (*it == "Y") {
+                ld->push_back(34);
+            } else if (*it == "A") {
+                throw std::invalid_argument("Invalid register.");
 
+            } else {
+                ld->push_back(35);
+                ld->push_back(number_to_int(*it));
+            }
+        } else if (*it == "JZ") {
+            ld->push_back(36);
+            it++;
+            tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JN") {
+            ld->push_back(37);
+            it++;tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JO") {
+            ld->push_back(38);
+            it++;tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JL") {
+            ld->push_back(39);
+            it++;
+            tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JG") {
+            ld->push_back(40);
+            it++;
+            tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JE") {
+            ld->push_back(41);
+            it++;
+            tmp = it->substr(3, 2);
+            ld->push_back(std::stoi(tmp));
+            tmp = it->substr(1, 2);
+            ld->push_back(std::stoi(tmp));
+        } else if (*it == "JMP") {
+            ld->push_back(42);
+            it++;
+            tmp.append(it->substr(3, 2));
+            ld->push_back(std::stoi(tmp));
+            tmp.append(it->substr(1, 2));
+            ld->push_back(std::stoi(tmp));
         }
     }
 
@@ -399,16 +534,17 @@ void to_arduino(std::list<int> *prog) {
     for (auto i: *prog) {
         tmp = to_bin(i);
         out.append("{ ");
-        for (char j : tmp) {
+        for (char j: tmp) {
             out.push_back(j);
+            out.push_back(',');
         }
+        out.pop_back();
         out.append(" },\n");
     }
     out.pop_back();
     out.pop_back();
-    out.pop_back();
     out.append("\n};");
-    std::cout<<out<<"\n";
+    std::cout << out << "\n";
 }
 
 int main() {
@@ -421,12 +557,15 @@ int main() {
     for (const auto &i: *l) {
         std::cout << i << "\n";
     }
-    auto ll = parse(l);
-    for (const auto &i: *ll) {
+
+    auto t = parse_labels(l);
+    auto ll = replace_labels(t);
+    auto lll = parse(ll);
+    for (const auto &i: *lll) {
         std::cout << i << "\n";
     }
 
     std::cout << "\n";
-    to_arduino(ll);
+    to_arduino(lll);
     return 0;
 }

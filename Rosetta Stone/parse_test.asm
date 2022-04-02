@@ -3,7 +3,6 @@ clr
 
 
 
-
 LdR A,                     0X81
 
 
@@ -13,3 +12,12 @@ mov X, a
                         ADD X
                         ADD Y
                         SUB 0x50
+
+st: CMp X
+    Je ext
+    add 0x01
+    jmp st
+Ext:
+    out A
+    HLT
+
