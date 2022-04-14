@@ -289,6 +289,13 @@ std::pair<std::list<std::pair<std::string, int>> *,
 
     ld->first = labels;
     ld->second = program;
+
+    for (const auto &i: *ld->first) {
+        if (i.first == "A" || i.first == "X" || i.first == "Y") {
+            throw std::invalid_argument("Label have same name as register.");
+        }
+    }
+
     return ld;
 }
 
@@ -547,10 +554,10 @@ void to_arduino(std::list<int> *prog) {
     std::cout << out << "\n";
 }
 
-int main() {
+int main(int argc, char **argv) {
     auto *f = new std::ifstream;
 
-    f->open("../parse_test.asm");
+    f->open(argv[1]);
     std::string a = trim(f);
     a = to_upper(a);
     auto *l = split(a);
@@ -561,11 +568,6 @@ int main() {
     auto t = parse_labels(l);
     auto ll = replace_labels(t);
     auto lll = parse(ll);
-    for (const auto &i: *lll) {
-        std::cout << i << "\n";
-    }
-
-    std::cout << "\n";
     to_arduino(lll);
     return 0;
 }
