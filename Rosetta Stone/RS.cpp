@@ -536,7 +536,7 @@ std::string to_bin(unsigned char num) {
 
 
 void to_arduino(std::list<int> *prog) {
-    std::string out = "bool X0[] = {\n";
+    std::string out = "bool X0[][8] = {\n";
     std::string tmp;
     for (auto i: *prog) {
         tmp = to_bin(i);
