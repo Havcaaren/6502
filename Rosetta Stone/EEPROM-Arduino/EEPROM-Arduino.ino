@@ -15,14 +15,14 @@ void WD(bool *add, bool *val) {
 
   delay(100);
 
-  digitalWrite(2, val[0]);
-  digitalWrite(3, val[1]);
-  digitalWrite(4, val[2]);
-  digitalWrite(5, val[3]);
-  digitalWrite(6, val[4]);
-  digitalWrite(7, val[5]);
-  digitalWrite(8, val[6]);
-  digitalWrite(9, val[7]);
+  digitalWrite(2, val[7]);
+  digitalWrite(3, val[6]);
+  digitalWrite(4, val[5]);
+  digitalWrite(5, val[4]);
+  digitalWrite(6, val[3]);
+  digitalWrite(7, val[2]);
+  digitalWrite(8, val[1]);
+  digitalWrite(9, val[0]);
 
   digitalWrite(10, LOW);
   delay(100);
@@ -75,30 +75,35 @@ void toBin(bool *b, int num) {
 }
 
 bool X0[][8] = {
+{ 0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,1,0,1 },
 { 0,0,1,0,0,0,0,0 },
 { 0,0,0,0,0,1,1,1 },
 { 1,0,0,0,0,0,0,1 },
-{ 0,0,0,1,0,0,0,0 },
-{ 0,0,0,1,0,0,1,0 },
+{ 0,0,0,1,0,0,0,1 },
+{ 0,0,0,1,0,0,1,1 },
 { 0,0,0,0,1,0,0,0 },
 { 0,0,0,0,1,0,0,1 },
 { 0,0,0,0,1,1,1,1 },
 { 0,1,0,1,0,0,0,0 },
-{ 0,0,1,0,0,0,0,1 },
-{ 0,0,1,0,1,0,0,1 },
+{ 0,0,1,0,0,0,1,0 },
+{ 0,0,1,0,1,0,1,0 },
 { 0,0,0,1,0,0,1,0 },
 { 0,0,0,0,0,0,0,0 },
 { 0,0,0,0,1,0,1,1 },
 { 0,0,0,0,0,0,0,1 },
-{ 0,0,1,0,1,0,1,0 },
+{ 0,0,1,0,1,0,1,1 },
 { 0,0,0,0,1,0,1,1 },
 { 0,1,0,0,1,1,0,0 },
-{ 0,0,0,0,0,1,0,0 }
+{ 0,0,0,0,0,1,0,0 },
+{ 1,0,0,0,0,0,0,0 }
 };
+
+int prog_size = sizeof(X0)/sizeof(X0[0]);
 
 void setup() {
   Serial.begin(9600);
+  Serial.println(prog_size);
   for (int i = 2; i <= 9; i++) {
     pinMode(i, OUTPUT); 
   }
@@ -123,7 +128,7 @@ bool A[13];
 
 Serial.println("A");
 
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < prog_size; i++) {
       Serial.print("A: ");
       Serial.print(i);
       toBin(A, i);
@@ -143,12 +148,9 @@ delay(1000);
     pinMode(i, INPUT); 
   }
 
-  for (int i = 0; i < 44; i++) {
-    Serial.println(i);
-    for (int j = 0; j < 16; j++) {
-        toBin(A, ((i*64) + j));
-        RD(A);
-    }
+  for (int i = 0; i < prog_size; i++) {
+    toBin(A, i);
+    RD(A);
   }
 }
 
