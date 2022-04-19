@@ -50,7 +50,7 @@
  * JG  41
  * JE  42
  * JMP 43
- * HLT 80+
+ * HLT 128+
  */
 
 int number_to_int(std::string num) {
@@ -515,7 +515,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
             tmp.append(it->substr(1, 2));
             ld->push_back(std::stoi(tmp));
         } else if (*it == "HLT") {
-            ld.push_back(80);
+            ld->push_back(128);
         }
     }
 
