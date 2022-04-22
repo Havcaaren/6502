@@ -1,5 +1,5 @@
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <fstream>
 #include <list>
 #include <algorithm>
@@ -249,144 +249,85 @@ std::list<std::string> *split(std::string buffer) {
     return ld;
 }
 
-std::pair<std::list<std::pair<std::string, int>> *,
-        std::list<std::string> *> *parse_labels(std::list<std::string> *buffer) {
-    auto *ld = new std::pair<std::list<std::pair<std::string, int>> *, std::list<std::string> *>;
-    auto *program = new std::list<std::string>;
-    auto *labels = new std::list<std::pair<std::string, int>>;
-    int pos = 0;
-    std::string tmp;
-    for (auto it = buffer->begin(); it != buffer->end(); it++) {
-        if (it->find(':') != std::string::npos) {
-            tmp = *it;
-            tmp.pop_back();
-            labels->push_back({tmp, pos + 1});
-        } else {
-            if (*it == "NOP" || *it == "CLR" || *it == "OUT" || *it == "MOV") {
-                pos++;
-            } else if (*it == "LDR") {
-                program->push_back(*it);
-                it++;
-                program->push_back(*it);
-                it++;
-                pos += 2;
-            } else if (*it == "ADD" || *it == "SUB" || *it == "AND" ||
-                       *it == "OR" || *it == "XOR" || *it == "NOT" || *it == "CMP") {
-                program->push_back(*it);
-                it++;
-                if (it->find('0') != std::string::npos) {
-                    pos += 2;
-                } else {
-                    pos++;
-                }
-            } else if (it->find('J') != std::string::npos) {
-                program->push_back(*it);
-                it++;
-                pos += 2;
-            }
-            program->push_back(*it);
-        }
-    }
-
-    ld->first = labels;
-    ld->second = program;
-
-    for (const auto &i: *ld->first) {
-        if (i.first == "A" || i.first == "X" || i.first == "Y") {
-            throw std::invalid_argument("Label have same name as register.");
-        }
-    }
-
-    return ld;
-}
-
-std::list<std::string> *replace_labels(std::pair<std::list<std::pair<std::string, int>> *,
-        std::list<std::string> *> *buffer) {
-    std::string tmp;
-    for (auto &i: *buffer->second) {
-        for (const auto &j: *buffer->first) {
-            if (i == j.first) {
-                tmp.clear();
-                tmp.append(std::to_string(j.second));
-                std::reverse(tmp.begin(), tmp.end());
-                while (tmp.size() < 4) {
-                    tmp.append("0");
-                }
-                tmp.append("A");
-                std::reverse(tmp.begin(), tmp.end());
-                i = tmp;
-            }
-        }
-    }
-    return buffer->second;
-}
-
 std::list<int> *parse(std::list<std::string> *buffer) {
-    auto *ld = new std::list<int>;
-    std::string tmp;
+    auto *ld = new std::list<std::string>;
+    auto *lmap = new std::map<std::string, int>;
+    int pos = 1;
     for (auto it = buffer->begin(); it != buffer->end(); it++) {
-        if (*it == "CLR") {
-            ld->push_back(0);
+        if (it->find(":") != std::string::npos) {
+            it->pop_back();
+            lmap->insert(std::make_pair((*it), pos));
+        } else if (*it == "CLR") {
+            pos++;
+            ld->push_back("0");
         } else if (*it == "NOP") {
-            ld->push_back(1);
+            pos++;
+            ld->push_back("1");
         } else if (*it == "OUT") {
             it++;
             if (*it == "X") {
-                ld->push_back(2);
+                ld->push_back("2");
             } else if (*it == "Y") {
-                ld->push_back(3);
+                ld->push_back("3");
             } else if (*it == "A") {
-                ld->push_back(4);
+                ld->push_back("4");
             } else {
                 throw std::invalid_argument("Expected register, but got " + *it);
             }
         } else if (*it == "LDR") {
+            pos++;
             it++;
             if (*it == "X") {
-                ld->push_back(5);
+                ld->push_back("5");
             } else if (*it == "Y") {
-                ld->push_back(6);
+                ld->push_back("6");
             } else if (*it == "A") {
-                ld->push_back(7);
+                ld->push_back("7");
             } else {
                 throw std::invalid_argument("Expected register, but got " + *it);
             }
+            pos++;
             it++;
-            ld->push_back(number_to_int(*it));
+            ld->push_back(*it);
         } else if (*it == "ADD") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(8);
+                ld->push_back("8");
             } else if (*it == "Y") {
-                ld->push_back(9);
+                ld->push_back("9");
             } else if (*it == "A") {
-                ld->push_back(10);
+                ld->push_back("10");
             } else {
-                ld->push_back(11);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("11");
+                ld->push_back(*it);
             }
         } else if (*it == "SUB") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(12);
+                ld->push_back("12");
             } else if (*it == "Y") {
-                ld->push_back(13);
+                ld->push_back("13");
             } else if (*it == "A") {
-                ld->push_back(14);
+                ld->push_back("14");
             } else {
-                ld->push_back(15);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("15");
+                ld->push_back(*it);
             }
         } else if (*it == "MOV") {
             it++;
+            pos++;
             if (*it == "X") {
                 it++;
                 if (*it == "X") {
                     throw std::invalid_argument("Invalid register combination.");
                 } else if (*it == "Y") {
-                    ld->push_back(16);
+                    ld->push_back("16");
                 } else if (*it == "A") {
-                    ld->push_back(17);
+                    ld->push_back("17");
                 } else {
                     throw std::invalid_argument("Unknown register.");
                 }
@@ -395,9 +336,9 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 if (*it == "Y") {
                     throw std::invalid_argument("Invalid register combination.");
                 } else if (*it == "X") {
-                    ld->push_back(18);
+                    ld->push_back("18");
                 } else if (*it == "A") {
-                    ld->push_back(19);
+                    ld->push_back("19");
                 } else {
                     throw std::invalid_argument("Unknown register.");
                 }
@@ -406,123 +347,137 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 if (*it == "A") {
                     throw std::invalid_argument("Invalid register combination.");
                 } else if (*it == "X") {
-                    ld->push_back(20);
+                    ld->push_back("20");
                 } else if (*it == "Y") {
-                    ld->push_back(21);
+                    ld->push_back("21");
                 } else {
                     throw std::invalid_argument("Unknown register.");
                 }
             }
         } else if (*it == "AND") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(22);
+                ld->push_back("22");
             } else if (*it == "Y") {
-                ld->push_back(23);
+                ld->push_back("23");
             } else {
-                ld->push_back(24);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("24");
+                ld->push_back(*it);
             }
         } else if (*it == "OR") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(25);
+                ld->push_back("25");
             } else if (*it == "Y") {
-                ld->push_back(26);
+                ld->push_back("26");
             } else {
-                ld->push_back(27);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("27");
+                ld->push_back(*it);
             }
         } else if (*it == "XOR") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(28);
+                ld->push_back("28");
             } else if (*it == "Y") {
-                ld->push_back(29);
+                ld->push_back("29");
             } else {
-                ld->push_back(30);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("30");
+                ld->push_back(*it);
             }
         } else if (*it == "NOT") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(31);
+                ld->push_back("31");
             } else if (*it == "Y") {
-                ld->push_back(32);
+                ld->push_back("32");
             } else if (*it == "A") {
-                ld->push_back(33);
+                ld->push_back("33");
             } else {
                 throw std::invalid_argument("Expected register, but got " + *it);
             }
         } else if (*it == "CMP") {
             it++;
+            pos++;
             if (*it == "X") {
-                ld->push_back(34);
+                ld->push_back("34");
             } else if (*it == "Y") {
-                ld->push_back(35);
+                ld->push_back("35");
             } else if (*it == "A") {
                 throw std::invalid_argument("Invalid register.");
-
             } else {
-                ld->push_back(36);
-                ld->push_back(number_to_int(*it));
+                pos++;
+                ld->push_back("36");
+                ld->push_back(*it);
             }
         } else if (*it == "JZ") {
-            ld->push_back(37);
-            it++;
-            tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("37");
         } else if (*it == "JN") {
-            ld->push_back(38);
-            it++;tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("38");
         } else if (*it == "JO") {
-            ld->push_back(39);
-            it++;tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("39");
         } else if (*it == "JL") {
-            ld->push_back(40);
-            it++;
-            tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("40");
         } else if (*it == "JG") {
-            ld->push_back(41);
-            it++;
-            tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("41");
         } else if (*it == "JE") {
-            ld->push_back(42);
-            it++;
-            tmp = it->substr(3, 2);
-            ld->push_back(std::stoi(tmp));
-            tmp = it->substr(1, 2);
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("42");
         } else if (*it == "JMP") {
-            ld->push_back(43);
-            it++;
-            tmp.append(it->substr(3, 2));
-            ld->push_back(std::stoi(tmp));
-            tmp.append(it->substr(1, 2));
-            ld->push_back(std::stoi(tmp));
+            pos++;
+            ld->push_back("43");
         } else if (*it == "HLT") {
-            ld->push_back(128);
+            pos++;
+            ld->push_back("128");
+        } else {
+            pos+=2;
+            ld->push_back(*it);
         }
     }
 
-    return ld;
+    auto *l = new std::list<int>;
+
+    for (auto it = ld->begin(); it != ld->end(); it++) {
+        auto x = lmap->find(*it);
+        if (x != lmap->end()) {
+            auto xx = x->second;
+            std::string a;
+            int y = 32768;
+            for (int i = 0; i < 16; ++i) {
+                if (xx - y >= 0) {
+                    a.append("1");
+                    xx -= y;
+                } else {
+                    a.append("0");
+                }
+                y /= 2;
+            }
+            l->push_back(std::strtoll((a.substr(0, 8)).c_str(), nullptr, 2));
+            l->push_back(std::strtoll((a.substr(8, 8)).c_str(), nullptr, 2));
+        } else {
+            if (it->find("0X") != std::string::npos) {
+                l->push_back(number_to_int(*it));
+            } else {
+                l->push_back(std::strtoll((*it).c_str(), nullptr, 10));
+            }
+        }
+    }
+
+    return l;
 }
 
-std::string to_bin(unsigned char num) {
+std::string to_bin(int num) {
     std::string a;
     int x = 128;
     for (int i = 0; i < 8; ++i) {
@@ -564,13 +519,11 @@ int main(int argc, char **argv) {
     std::string a = trim(f);
     a = to_upper(a);
     auto *l = split(a);
-    for (const auto &i: *l) {
-        std::cout << i << "\n";
-    }
+    // for (const auto &i: *l) {
+    //     std::cout << i << "\n";
+    // }
 
-    auto t = parse_labels(l);
-    auto ll = replace_labels(t);
-    auto lll = parse(ll);
-    to_arduino(lll);
+    auto ll = parse(l);
+    to_arduino(ll);
     return 0;
 }
