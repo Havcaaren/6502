@@ -43,13 +43,13 @@
  * CMX 34
  * CMY 35
  * CMV 36
- * JZ  37
- * JN  38
- * JO  39
- * JL  40
- * JG  41
- * JE  42
- * JMP 43
+ * JZ  40
+ * JL  41
+ * JG  42
+ * JE  43
+ * JZ  44
+ * JO  45
+ * JMP 46
  * HLT 128+
  */
 
@@ -463,8 +463,8 @@ std::list<int> *parse(std::list<std::string> *buffer) {
                 }
                 y /= 2;
             }
-            l->push_back(std::strtoll((a.substr(0, 8)).c_str(), nullptr, 2));
             l->push_back(std::strtoll((a.substr(8, 8)).c_str(), nullptr, 2));
+            l->push_back(std::strtoll((a.substr(0, 8)).c_str(), nullptr, 2));
         } else {
             if (it->find("0X") != std::string::npos) {
                 l->push_back(number_to_int(*it));
