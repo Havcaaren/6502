@@ -10,4 +10,6 @@ loop:
 	jg end
 	jmp loop
 
-end: hlt
+end:
+	out a
+	hlt
