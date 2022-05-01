@@ -43,13 +43,13 @@
  * CMX 34
  * CMY 35
  * CMV 36
- * JZ  40
  * JL  41
  * JG  42
  * JE  43
  * JZ  44
  * JO  45
  * JMP 46
+ * JZ  47
  * HLT 128+
  */
 
@@ -256,7 +256,7 @@ std::list<int> *parse(std::list<std::string> *buffer) {
     for (auto it = buffer->begin(); it != buffer->end(); it++) {
         if (it->find(":") != std::string::npos) {
             it->pop_back();
-            lmap->insert(std::make_pair((*it), pos));
+            lmap->insert(std::make_pair((*it), pos-1));
         } else if (*it == "CLR") {
             pos++;
             ld->push_back("0");
@@ -418,25 +418,25 @@ std::list<int> *parse(std::list<std::string> *buffer) {
             }
         } else if (*it == "JZ") {
             pos++;
-            ld->push_back("37");
-        } else if (*it == "JN") {
-            pos++;
-            ld->push_back("38");
-        } else if (*it == "JO") {
-            pos++;
-            ld->push_back("39");
+            ld->push_back("47");
         } else if (*it == "JL") {
             pos++;
-            ld->push_back("40");
+            ld->push_back("41");
         } else if (*it == "JG") {
             pos++;
-            ld->push_back("41");
+            ld->push_back("42");
         } else if (*it == "JE") {
             pos++;
-            ld->push_back("42");
+            ld->push_back("43");
+        } else if (*it == "JO") {
+            pos++;
+            ld->push_back("44");
+        } else if (*it == "JN") {
+            pos++;
+            ld->push_back("45");
         } else if (*it == "JMP") {
             pos++;
-            ld->push_back("43");
+            ld->push_back("46");
         } else if (*it == "HLT") {
             pos++;
             ld->push_back("128");
