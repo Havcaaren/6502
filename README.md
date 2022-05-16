@@ -1,3 +1,3 @@
-# CUBE (8bit CPU) 
+# 8bit CPU
 
 Autor: Matej Dinis.
